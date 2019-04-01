@@ -12,7 +12,11 @@
   <div class="td-header__action-holder">
     <ul class="header__actions">
       <li class="header__action">
+      <?php if ($session == true) { ?>
         <a href="/signin">ログイン</a>
+      <?php } else{
+        echo $userName . "さん"; 
+      ?>
       </li>
       <li class="header__action">
         <a href="/signup">サインアップ</a>
