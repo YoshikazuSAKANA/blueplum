@@ -25,9 +25,8 @@ class UserController {
 
         $input = $_REQUEST;
         $DBModel = new DBModel();
-        $DBModel->registUser($input);
 
-        if ($signup === true) {
+        if ($DBModel->registUser($input)) {
             require_once(_VIEW_DIR . '/top.html');
         } else {
             require_once(_VIEW_DIR . '/signup.html');
