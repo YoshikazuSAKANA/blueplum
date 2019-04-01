@@ -1,0 +1,27 @@
+<html>
+<head lang="ja">
+<meta charset="UTF-8">
+<title>todoist</title>
+<link rel="stylesheet" type="text/css" href="/css/top.css">
+</head>
+<body>
+<div class="header">
+  <div class="td-brand">
+    <img alt="Todoist" class="td-header__logo" src="https://d3ptyyxy2at9ui.cloudfront.net/logo-todoist-b5b89f.svg">
+  </div>
+  <div class="td-header__action-holder">
+    <ul class="header__actions">
+      <li class="header__action">
+        <a href="/signin">ログイン</a>
+      </li>
+      <li class="header__action">
+        <a href="/signup">サインアップ</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<a href="product/<?php echo $products['maker'] . $products['id']; ?>" ><?=$products['id']?></a>
+
+</body>
+</html>

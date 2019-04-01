@@ -1,0 +1,33 @@
+.header {
+  height: 100px;
+  width: 100%;
+  display: inline-flex;
+}
+
+.td-brand {
+  height: 100%;
+  width: 300px;
+}
+
+.td-header__logo {
+  width: 100%;
+}
+
+.td-header__action-holder {
+  width: 100%;
+  text-align: right;
+}
+
+.td-header__action-holder ul li{
+  display: inline-block;
+  background-color: antiquewhite;
+}
+
+.header__actions {
+  height: 100%;
+  text-align: right;
+  position: unset;
+}
+
+
+
