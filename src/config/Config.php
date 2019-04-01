@@ -12,7 +12,7 @@
 
 define("_DEBUG_MODE", false); 
 
-define("_ROOT_DIR", "/home/y/share/pear/ymols/src");
+define("_ROOT_DIR", "/home/y/share/pear/blueplum/src");
 
 
 //----------------------------------------------------
