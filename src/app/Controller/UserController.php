@@ -15,6 +15,12 @@ class UserController {
         $DBModel = new DBModel();
         $userData = $DBModel->getUserInfo($inputMailAddress);
         if ($inputMailAddress === $userData['mail_address'] && $inputPassword === $userData['password']) {
+            $auth = new auth();
+            $auth->setAuthname('_USER_INFO');
+            $auth->setSessname('_MEMBER_SESSID');
+            $auth->start();
+            $_SESSION[$auth->getAuthname] = $userData;
+
             require_once(_VIEW_DIR . '/top.html');
         } else {
             require_once(_VIEW_DIR . '/signin.html');
@@ -33,4 +39,13 @@ class UserController {
         }
 
     }
+
+    public function LogoutAction() {
+
+        $auth = new auth();
+        $auth->logout();
+
+        require_once(_VIEW_DIR . '/top.html');
+    }
+
 }

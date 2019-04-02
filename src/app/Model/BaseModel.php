@@ -12,4 +12,9 @@
  */
 class BaseModel {
 
+    public function dispCalendar() {
+
+
+    }
+
 }
