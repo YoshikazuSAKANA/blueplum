@@ -23,22 +23,20 @@ for ($month = 1; $month < 13; $month++) {
     // 月の最終日を取得
     $monthTotalDate = date('t', mktime(0,0,0,$month,1,$targetYear));
 
-    if ($monthTotalDate + $monthFirstweek > 35) {
-        $createWeekRow = 6;
-    } else {
+    if ($monthTotalDate + $monthFirstweek <= 35) {
         $createWeekRow = 5;
+    } else {
+        $createWeekRow = 6;
     }
 ?>
 
-<b>
-<?php echo $targetYear . "/" . $month; ?>
-</b>
+<b><?php echo $targetYear . "/" . $month; ?></b>
 
 <table border="1">
 
 <tr>
   <?php foreach($weekName as $week): ?>
-    <th><?php echo $weeak; ?></th>
+    <th><?php echo $week; ?></th>
   <?php endforeach; ?>
 </tr>
 
@@ -46,21 +44,14 @@ for ($month = 1; $month < 13; $month++) {
 <tr>
   <?php for($i=1; $i <= 7; $i++) {
     if (($week == "1" && $i <= $monthFirstweek) || ($day > $monthTotalDate)) { ?>
-    <td></td>
-    <?php
-        continue;
-    } ?>
-    <td>
-    <?php echo $day; 
-      $day++; 
-    ?>
-  </td>
+      <td></td>
+    <?php continue; } ?>
+    <td><?php echo $day; $day++; ?></td>
   <?php } ?>
 </tr>
 <?php } ?>
 
 </table>
-
 <br>
 <?php
 }
