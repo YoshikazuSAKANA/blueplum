@@ -43,7 +43,6 @@ class Dispatcher {
             echo "URLが間違っています。";
             die;
         }
-
         if (file_exists($controllerFile)) {
 
             //コントローラ呼び出し
@@ -53,7 +52,7 @@ class Dispatcher {
             $controllerInstance->$action($container);
         } else {
             die;
-        }            
+        }
     }
 
     public function getClassName($path) {

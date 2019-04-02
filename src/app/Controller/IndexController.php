@@ -6,7 +6,7 @@ class IndexController {
 
         $DBModel = new DBModel();
         $products = $DBModel->searchALL();
-        
+
         require_once(_VIEW_DIR . '/top.html');
     }
 }

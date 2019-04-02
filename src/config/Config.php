@@ -98,10 +98,10 @@ $conf = [
           ['GET', '/', 'IndexController', 'IndexAction'],
           ['GET', '/signin', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signin.html'],
           ['GET', '/signup', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signup.html'],
+          ['GET', '/calendar', 'UserController', 'PageLoadAction', _VIEW_DIR . '/calendar.html'],
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
           ['GET', '/user/logout', 'UserController', 'LogoutAction']
         ];
-
 
