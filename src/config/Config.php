@@ -88,6 +88,7 @@ define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
 // 読み込みの順番を変えると動作しません。
 require_once( _MODEL_DIR      . "/BaseModel.php");
 require_once( _MODEL_DIR      . "/DBModel.php");
+require_once( _MODEL_DIR      . "/Auth.php");
 
 //----------------------------------------------------
 // ルーティング設定
@@ -100,6 +101,7 @@ $conf = [
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
+          ['GET', '/user/logout', 'UserController', 'LogoutAction']
         ];
 
 

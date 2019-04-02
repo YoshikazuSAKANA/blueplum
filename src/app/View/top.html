@@ -11,12 +11,18 @@
   </div>
   <div class="td-header__action-holder">
     <ul class="header__actions">
+    <?php if (empty($_SESSION[$auth->getAuthname])) { ?>
       <li class="header__action">
         <a href="/signin">ログイン</a>
       </li>
       <li class="header__action">
         <a href="/signup">サインアップ</a>
       </li>
+    <?php } else { ?>
+    <li class="header__action">
+        <a href="/user/logout">ログアウト</a>
+      </li>
+    <?php } ?>
     </ul>
   </div>
 </div>
