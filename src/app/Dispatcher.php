@@ -47,31 +47,11 @@ class Dispatcher {
 
             //コントローラ呼び出し
             require_once($controllerFile);
-
             $controllerInstance = new $className();
-            $controllerInstance->$action($container);
+            $controllerInstance->$action($param);
         } else {
             die;
         }
-    }
-
-    public function getClassName($path) {
-
-        // クラス名
-        $className;
-
-        $path = rtrim($path, '/');
-        $path = explode('/', $path);
-
-        // class取得
-        if (count($path) > 1 && end($path) != 'index' && end($path) != 'index.php') {
-            $className = $path[1];
-        } elseif ((count($path) == '1') || (count($path) == '2' && end($path) == 'index.php')) {
-            $className = 'index';
-        }
-        $className = ucfirst(strtolower($className)) . 'Controller';
-
-        return $className;
     }
 
 }

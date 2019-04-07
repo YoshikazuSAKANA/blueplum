@@ -102,6 +102,7 @@ $conf = [
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
-          ['GET', '/user/logout', 'UserController', 'LogoutAction']
+          ['GET', '/user/logout', 'UserController', 'LogoutAction'],
+          ['GET', '/mypage/:id', 'UserController', 'MyPageAction']
         ];
 

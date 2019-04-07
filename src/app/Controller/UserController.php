@@ -48,4 +48,10 @@ class UserController {
         require_once(_VIEW_DIR . '/top.html');
     }
 
+    public function MyPageAction($userId) {
+        $DBModel = new DBModel();
+        $userData = $DBModel->getUserInfo($userId, 'id');
+
+        require_once(_VIEW_DIR . '/mypage.html');
+    }
 }

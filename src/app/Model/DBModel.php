@@ -35,13 +35,14 @@ class DBModel extends BaseModel {
         }
     }
 
-    public function getUserInfo($mailAddress) {
+    // ログインORマイページ遷移
+    public function getUserInfo($userData, $dataType = 'mail_address') {
 
         try {
-          $sql = 'SELECT * FROM member WHERE mail_address = :mail_address ';
+          $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
 
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':mail_address', $mailAddress, PDO::PARAM_STR);    
+          $stmh->bindValue(':'. $dataType, $userData, PDO::PARAM_STR);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
 

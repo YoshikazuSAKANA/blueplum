@@ -29,6 +29,10 @@
 
 <a href="product/<?php echo $products['maker'] . $products['id']; ?>" ><?=$products['id']?></a>
 
+<?php if (!empty($_SESSION[$auth->getAuthname])) { ?>
+<a href="/mypage/<?php echo $userData['id']; ?>">マイページ</a>
+<?php } ?>
+
 <a href="/calendar">カレンダー</a>
 
 </body>

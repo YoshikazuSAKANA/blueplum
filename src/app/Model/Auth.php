@@ -59,8 +59,7 @@ class Auth {
         
         return $hash;
     }
-    
-    
+
     // パスワードが一致したらtrueを返します
     public function checkPassword($password, $hashed_password){
         if (crypt($password, $hashed_password) == $hashed_password ) {
@@ -89,7 +88,6 @@ class Auth {
         if (ini_get("session.use_cookies")) {
             // セッションクッキーのパラメータを取得
             $params = session_get_cookie_params();
-print_r($params);
 
             setcookie(session_name(), '', time() + 42000,
                 $params["path"], $params["domain"],
@@ -97,13 +95,9 @@ print_r($params);
             );
         }
 
-print_r($params);
         // セッションを破壊
-//        session_destroy();
+        session_destroy();
     }
-
-// 
-
 
 }
 
