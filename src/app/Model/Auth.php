@@ -9,31 +9,13 @@ class Auth {
     private $authName; // 認証情報の格納先名
     private $sessName; // セッション名
 
-    public function setAuthname($name){
-        $this->authName = $name;
-    }
-    
-    public function getAuthname(){
-        return $this->authName;
-    }
-
-    public function setSessname($name){
-        $this->sessName = $name;
-    }
-    
-    public function getSessname(){
-        return $this->sessName;
-    }
-
     public function start(){
         // セッションが既に開始している場合は何もしない。
         if(session_status() ===  PHP_SESSION_ACTIVE){
             return;
         }
-        if($this->sessName != ""){
-            session_name($this->sessName);
-        }
         // セッション開始
+        session_name(_MEMBER_SESSNAME);
         session_start();
     }
     

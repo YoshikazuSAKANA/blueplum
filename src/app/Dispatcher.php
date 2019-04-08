@@ -9,7 +9,11 @@ class Dispatcher {
 
         // リクエストがGETであればリダイレクト
         $requestMethod = $_SERVER['REQUEST_METHOD'];
-        $container = array();
+
+        // URLのパラメーター
+        $param = null;
+
+        // コンフィグURLのチェック
         $chkUrl = false;
 
         for ($i = 0;$i < count($conf); $i) {
@@ -50,7 +54,7 @@ class Dispatcher {
             $controllerInstance = new $className();
             $controllerInstance->$action($param);
         } else {
-            die;
+            exit();
         }
     }
 

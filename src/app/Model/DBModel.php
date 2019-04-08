@@ -18,12 +18,10 @@ class DBModel extends BaseModel {
       }
     }
 
-    public function searchALL() {
+    public function searchProductDetail($id) {
 
-        $id = 1;
         try {
           $sql = 'SELECT * FROM cars WHERE id = :id ';
-
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':id', $id, PDO::PARAM_INT);
           $stmh->execute();
@@ -53,8 +51,19 @@ class DBModel extends BaseModel {
     }
 
     public function registUser($input) {
-print_r($input);
+
         try {
+          // 同一のメールアドレスが存在しないか確認
+          $sql = 'SELECT mail_address FROM member WHERE mail_address = :mail_address';
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':mail_address', $input['mail_address'], PDO::PARAM_STR);
+          $stmh->execute();
+          $result = $stmh->fetch(PDO::FETCH_ASSOC);
+        if ($result['mail_address'] == $input['mail_address']) {
+            echo "同じメールアドレスが存在します";
+            return false;
+        }
+          // 入力情報をDBに登録
           $sql = 'INSERT INTO member (last_name, first_name, mail_address, password) VALUES (:last_name, :first_name, :mail_address, :password)';
 
           $this->pdo->beginTransaction();

@@ -2,8 +2,11 @@
 
 class ProductController {
 
-    public function dispCarDetailAction() {
+    public function dispCarDetailAction($id) {
 
-        echo "ok";
+        $DBModel = new DBModel();
+        $product = $DBModel->searchProductDetail($id);
+
+        require_once(_VIEW_DIR . '/detail.html');
     }
 }

@@ -18,8 +18,6 @@ function showClock() {
     document.getElementById("RealTimeClockArea") . innerHTML = msg;
 }
 
-setInterval('showClock()',1000);
-
 function showTimeLimit(tYear, tMonth, tDay) {
     // 現在時刻を数値に変換
     let nowTime = new Date();
