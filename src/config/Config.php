@@ -96,9 +96,10 @@ require_once( _MODEL_DIR      . "/Auth.php");
 
 $conf = [
           ['GET', '/', 'IndexController', 'IndexAction'],
-          ['GET', '/signin', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signin.html'],
-          ['GET', '/signup', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signup.html'],
-          ['GET', '/calendar', 'UserController', 'PageLoadAction', _VIEW_DIR . '/calendar.html'],
+          ['GET', '/signin', null, 'PageLoadAction', _VIEW_DIR . '/signin.html'],
+          ['GET', '/signup', null, 'PageLoadAction', _VIEW_DIR . '/signup.html'],
+          ['GET', '/calendar', null, 'PageLoadAction', _VIEW_DIR . '/calendar.html'],
+          ['GET', '/error', null, 'PageLoadAction', _VIEW_DIR . '/error.html'],
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],

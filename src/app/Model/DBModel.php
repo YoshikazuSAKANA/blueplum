@@ -14,7 +14,9 @@ class DBModel extends BaseModel {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
       } catch (PDOException $Exception) {
-          die('接続エラー：' . $Exception->getMessage());
+          echo '接続エラー：' . $Exception->getMessage();
+          header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
+          exit();
       }
     }
 
@@ -50,33 +52,51 @@ class DBModel extends BaseModel {
         }
     }
 
-    public function registUser($input) {
+    public function registUser($postData) {
 
         try {
+          $this->pdo->beginTransaction();
           // 同一のメールアドレスが存在しないか確認
           $sql = 'SELECT mail_address FROM member WHERE mail_address = :mail_address';
+
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':mail_address', $input['mail_address'], PDO::PARAM_STR);
+          $stmh->bindValue(':mail_address', $postData['mail_address'], PDO::PARAM_STR);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
-        if ($result['mail_address'] == $input['mail_address']) {
-            echo "同じメールアドレスが存在します";
-            return false;
+        if ($result['mail_address'] == $postData['mail_address']) {
+            throw new PDOException('同じメールアドレスが存在します');
         }
           // 入力情報をDBに登録
-          $sql = 'INSERT INTO member (last_name, first_name, mail_address, password) VALUES (:last_name, :first_name, :mail_address, :password)';
+          $sql = 'INSERT INTO member (last_name, first_name, birthday, mail_address, password) VALUES (:last_name, :first_name, :birthday, :mail_address, :password)';
 
-          $this->pdo->beginTransaction();
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':last_name', $input['last_name'], PDO::PARAM_STR);
-          $stmh->bindValue(':first_name', $input['first_name'], PDO::PARAM_STR);
-          $stmh->bindValue(':mail_address', $input['mail_address'], PDO::PARAM_STR);
-          $stmh->bindValue(':password', $input['password'], PDO::PARAM_STR);
+          $stmh->bindValue(':last_name', $postData['last_name'], PDO::PARAM_STR);
+          $stmh->bindValue(':first_name', $postData['first_name'], PDO::PARAM_STR);
+          $stmh->bindValue(':birthday', $postData['birthday'], PDO::PARAM_STR);
+          $stmh->bindValue(':mail_address', $postData['mail_address'], PDO::PARAM_STR);
+          $stmh->bindValue(':password', $postData['password'], PDO::PARAM_STR);
           $stmh->execute();
           $this->pdo->commit();
           echo "データを" . $stmh->rowCount() . "件挿入しました";
         } catch(PDOException $e) {
             $this->pdo->rollback();
+            return false;
+            echo "ERROR: " . $e->getMessage();
+        }
+    }
+
+    public function checkExistMailAddress($mailAddress) {
+
+        try {
+          // 同一のメールアドレスが存在しないか確認
+          $sql = 'SELECT mail_address FROM member WHERE mail_address = :mail_address';
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':mail_address', $mailAddress, PDO::PARAM_STR);
+          $stmh->execute();
+          if ($stmh->rowCount() > 0) {
+              return false;
+          }
+        } catch(PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
     }
