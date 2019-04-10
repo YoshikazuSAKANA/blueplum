@@ -30,9 +30,9 @@
 <a href="product/<?php echo $products['maker'] . $products['id']; ?>" ><?=$products['id']?></a>
 
 <?php if (!empty($_SESSION['user_name'])) { ?>
-<b><?php echo $_SESSION['user_name'] . "さんようこそ"; ?></b>
+<b><?=$_SESSION['user_name']?></b>さんようこそ
 <br>
-<a href="/mypage/<?php echo $_SESSION['user_id']; ?>">マイページ</a>
+<a href="/mypage/<?=$_SESSION['user_id']?>">マイページ</a>
 <?php } ?>
 
 <a href="/calendar">カレンダー</a>
