@@ -1,12 +1,23 @@
 <?php
 
+/**
+ * ユーザ情報に関するクラス
+ *
+ * ログイン機能や会員登録に関するメソッドをまとめたアクションクラス
+ *
+ * @access public
+ * @author YoshikazuSakamoto
+ * @category User
+ * @package Controller
+*/
 class UserController {
 
-    public function PageLoadAction() {
-
-        require_once(_VIEW_DIR . '/signin.html');
-    }
-
+    /**
+     * ユーザーのログインを実行
+     * メールアドレス、パスワードをチェックします
+     *
+     * @access public
+     */
     public function SigninAction() {
 
         $inputMailAddress = htmlspecialchars($_POST['mail_address'], ENT_QUOTES, 'UTF-8');
@@ -25,6 +36,17 @@ class UserController {
         }
     }
 
+    /**
+     * ユーザーの会員登録を実行
+     * フォーム画面、確認画面それぞれで実行
+     * 処理内容によって下記番号を表示
+     * 0: 登録確認画面
+     * 1: トップ画面
+     * 2: 登録ファーム画面
+     * 3: エラー画面
+     *
+     * @access public
+     */
     public function SignupAction() {
 
         // 画面出しわけ
@@ -82,6 +104,11 @@ class UserController {
         }
     }
 
+    /**
+     * ユーザーのログアウトを実行
+     *
+     * @access public
+     */
     public function LogoutAction() {
 
         $auth = new auth();
@@ -90,6 +117,13 @@ class UserController {
         require_once(_VIEW_DIR . '/top.html');
     }
 
+    /**
+     * ユーザーのマイページを表示.
+     * ユーザーidを使用して、DBから値を抽出
+     *
+     * @access public
+     * @param int $id
+     */
     public function MyPageAction($userId) {
         $DBModel = new DBModel();
         $userData = $DBModel->getUserInfo($userId, 'id');
@@ -97,6 +131,13 @@ class UserController {
         require_once(_VIEW_DIR . '/mypage.html');
     }
 
+    /**
+     * 登録フォーム画面のレスポンチ値をバリデーションのために整形
+     *
+     * @access public
+     * @param array $postData
+     * @return array $postData
+     */
     public function formatPostData($postData) {
 
         // 姓の空白を削除
@@ -126,6 +167,14 @@ class UserController {
         return $postData;
     }
 
+    /**
+     * 登録フォームのレスポンス値(整形後)をバリデーション.
+     * 処理ごとにエラー文を格納
+     *
+     * @access public
+     * @param array $data
+     * @return array $data
+     */
     public function validation($data) {
 
         // エラー文
