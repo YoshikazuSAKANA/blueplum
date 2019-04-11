@@ -1,14 +1,23 @@
 <?php
 /**
- * Description of Auth
+ * ユーザー認証に関するクラス
  *
- * @author nagatayorinobu
+ * @author Yoshikazu Sakamoto
+ * @category Auth
+ * @package Model
  */
 class Auth {
     // セッションに関する処理
     private $authName; // 認証情報の格納先名
     private $sessName; // セッション名
 
+    /**
+     * セッションスタートを実行.
+     * セッション名を命名する
+     *
+     * @access public
+     * @return
+     */
     public function start(){
         // セッションが既に開始している場合は何もしない。
         if(session_status() ===  PHP_SESSION_ACTIVE){
@@ -19,13 +28,24 @@ class Auth {
         session_start();
     }
     
-    // 認証情報の確認
+     /**
+      * セッション情報を確認
+      *
+      * @access public
+      */
     public function check(){
         if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['id'] >= 1){
             return true;
         }
     }
 
+     /**
+      * パスワードのハッシュ化
+      *
+      * @access public
+      * @param var $password
+      * @return hash $hash
+      */
     public function getHashedPassword($password) {
         // コストパラメーター
         // 04 から 31 までの範囲 大きくなれば堅牢になりますが、システムに負荷がかかります。
@@ -42,7 +62,15 @@ class Auth {
         return $hash;
     }
 
-    // パスワードが一致したらtrueを返します
+    /**
+      * パスワードの認証.
+      * ハッシュ化パスワードを戻し。認証
+      *
+      * @access public
+      * @param var $password
+      * @param hash $hashed_password
+      * @return boolean パスワードが正しいかどうか
+      */
     public function checkPassword($password, $hashed_password){
         if (crypt($password, $hashed_password) == $hashed_password ) {
             return true;
@@ -60,7 +88,11 @@ class Auth {
     }
     
 
-    // 認証情報を破棄
+    /**
+     * 認証情報を破棄.
+     * セッション、クッキーを破棄する
+     * @access public
+     */
     public function logout(){
         // セッション変数を空にする
         $_SESSION = [];

@@ -89,6 +89,7 @@ define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
 require_once( _MODEL_DIR      . "/BaseModel.php");
 require_once( _MODEL_DIR      . "/DBModel.php");
 require_once( _MODEL_DIR      . "/Auth.php");
+require_once( _MODEL_DIR      . "/Validation.php");
 
 //----------------------------------------------------
 // ルーティング設定

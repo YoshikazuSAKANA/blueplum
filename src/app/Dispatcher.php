@@ -1,7 +1,22 @@
 <?php
-
+/**
+ * URLのルーティングを行うクラス
+ *
+ * @author Yoshikazu Sakamoto
+ * @category Rooting
+ * @package Controller
+ */
 class Dispatcher {
 
+    /**
+     * ルーティング.
+     * ユーザーの入力したURLをConfファイルと照らし、ルーティングを行う
+     * URLに依存するコントローラを呼び出し、アクションメソッドを実行する
+     * 
+     * @access public
+     * @param $conf
+     * URL, REQUEST_METHOD, paramが存在するかなどを配列で設定している
+     */
     public function dispatch($conf) {
 
         // ユーザーの入力したURLを取得

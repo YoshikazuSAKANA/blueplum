@@ -1,13 +1,31 @@
 <?php
-
+/**
+ * DBに関するクラス
+ *
+ * @author Yoshikazu Sakamoto
+ * @category DB
+ * @package Model
+ */
 class DBModel extends BaseModel {
 
     private $pdo;
 
+    /**
+     * コンストラクタ.
+     * DBに接続します
+     *
+     * @access public
+     */
     public function __construct() {
         $this->db_connect();
     }
 
+    /**
+     * MySQLに接続.
+     * pdoイオブジェクトをインスタンス化
+     *
+     * @access public
+     */
     public function db_connect() {
      try {
         $this->pdo = new PDO(_DSN,_DB_USER,_DB_PASS);
@@ -20,6 +38,13 @@ class DBModel extends BaseModel {
       }
     }
 
+    /**
+     * 商品情報を抽出.
+     *
+     * @access public
+     * @param int $id
+     * @return array $result
+     */
     public function searchProductDetail($id) {
 
         try {
@@ -35,7 +60,16 @@ class DBModel extends BaseModel {
         }
     }
 
-    // ログインORマイページ遷移
+    /**
+     * ユーザー情報を抽出.
+     * ログインORマイページ遷移時に使用するメソッド
+     *
+     * @access public
+     * @param var $userData
+     * @param var $dataType
+     * ログインか、マイページ遷移を判定
+     * @return array $result
+     */
     public function getUserInfo($userData, $dataType = 'mail_address') {
 
         try {
@@ -45,13 +79,21 @@ class DBModel extends BaseModel {
           $stmh->bindValue(':'. $dataType, $userData, PDO::PARAM_STR);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
-
           return $result;
         } catch (PDOException $e) {
           echo "ERROR: " . $e->getMessage();
+          return false;
         }
     }
 
+    /**
+     * ユーザー情報をMySQLに挿入.
+     * 会員登録フォームで入力されたデータを挿入します
+     *
+     * @access public
+     * @param array $postData
+     * throws PDOException
+     */
     public function registUser($postData) {
 
         try {
@@ -85,6 +127,15 @@ class DBModel extends BaseModel {
         }
     }
 
+    /**
+     * メールアドレスを抽出.
+     * 会員登録フォームでユーザーの入力したメールアドレスが存在するかどうか
+     *
+     * @access public
+     * @param var $mailAddress
+     * @return boolean メールアドレスが存在するかどうか
+     * @throws PDOException
+     */
     public function checkExistMailAddress($mailAddress) {
 
         try {
