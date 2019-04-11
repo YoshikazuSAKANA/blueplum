@@ -97,6 +97,35 @@ class UserController {
         require_once(_VIEW_DIR . '/mypage.html');
     }
 
+    public function formatPostData($postData) {
+
+        // 姓の空白を削除
+        if (!empty($postData['last_name'])) {
+            $postData['last_name'] = str_replace(array(' ','　'), '', $postData['last_name']);
+        }
+
+        // 名前の空白を削除
+        if (!empty($postData['first_name'])) {
+            $postData['first_name'] = str_replace(array(' ','　'), '', $postData['first_name']);
+        }
+
+        // 生年月日を半角に変換
+        if (!empty($postData['birthday'])) {
+            $postData['birthday'] = mb_convert_kana($postData['birthday'], 'n');
+        }
+
+        // メールアドレスを半角に変換
+        if (!empty($postData['mail_address'])) {
+            $postData['mail_address'] = mb_convert_kana($postData['mail_address'], 'a');
+        }
+
+        // パスワードを半角に変換
+        if (!empty($postData['password'])) {
+            $postData['password'] = mb_convert_kana($postData['password'], 'a');
+        }
+        return $postData;
+    }
+
     public function validation($data) {
 
         // エラー文
@@ -151,32 +180,4 @@ class UserController {
         return $error;  
     }
 
-    public function formatPostData($postData) {
-
-        // 姓の空白を削除
-        if (!empty($postData['last_name'])) {
-            $postData['last_name'] = str_replace(array(' ','　'), '', $postData['last_name']);
-        }
-
-        // 名前の空白を削除
-        if (!empty($postData['first_name'])) {
-            $postData['first_name'] = str_replace(array(' ','　'), '', $postData['first_name']);
-        }
-
-        // 生年月日を半角に変換
-        if (!empty($postData['birthday'])) {
-            $postData['birthday'] = mb_convert_kana($postData['birthday'], 'n');
-        }
-
-        // メールアドレスを半角に変換
-        if (!empty($postData['mail_address'])) {
-            $postData['mail_address'] = mb_convert_kana($postData['mail_address'], 'a');
-        }
-
-        // パスワードを半角に変換
-        if (!empty($postData['password'])) {
-            $postData['password'] = mb_convert_kana($postData['password'], 'a');
-        }
-        return $postData;
-    }
 }
