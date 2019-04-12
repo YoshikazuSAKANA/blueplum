@@ -44,21 +44,12 @@ class Auth {
       *
       * @access public
       * @param var $password
-      * @return hash $hash
+      * @return int $hash
       */
     public function getHashedPassword($password) {
-        // コストパラメーター
-        // 04 から 31 までの範囲 大きくなれば堅牢になりますが、システムに負荷がかかります。
-        $cost = 10;
 
-        // ランダムな文字列を生成します。
-        $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
-
-        // ソルトを生成します。
-        $salt = sprintf("$2y$%02d$", $cost) . $salt;
-
-        $hash = crypt($password, $salt);
-        
+        // ハッシュパスワードの生成
+        $hash = password_hash($password, PASSWORD_DEFAULT);
         return $hash;
     }
 
@@ -68,11 +59,11 @@ class Auth {
       *
       * @access public
       * @param var $password
-      * @param hash $hashed_password
+      * @param hash $hashedPassword
       * @return boolean パスワードが正しいかどうか
       */
-    public function checkPassword($password, $hashed_password){
-        if (crypt($password, $hashed_password) == $hashed_password ) {
+    public function checkPassword($password, $hashedPassword){
+        if (password_verify($password, $hashedPassword)) {
             return true;
         }
     }

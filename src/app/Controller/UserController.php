@@ -13,7 +13,7 @@
 class UserController {
 
     /**
-     * ユーザーのログインを実行
+     * ユーザーのログインを実行.
      * メールアドレス、パスワードをチェックします
      *
      * @access public
@@ -24,10 +24,15 @@ class UserController {
         $inputPassword = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
 
         $DBModel = new DBModel();
+        $Auth = new Auth();
         $userData = $DBModel->getUserInfo($inputMailAddress);
-        if ($inputMailAddress === $userData['mail_address'] && $inputPassword === $userData['password']) {
-            $auth = new auth();
-            $auth->start();
+
+        // メールアドレスとパスワードが正しいか確認
+        if ($inputMailAddress == $userData['mail_address'] && 
+            $Auth->checkPassword($inputPassword, $userData['password']) === true) {
+
+            // セッションスタート
+            $Auth->start();
             $_SESSION['user_id'] = $userData['id'];
             $_SESSION['user_name'] = $userData['first_name'];
             require_once(_VIEW_DIR . '/top.html');
@@ -68,13 +73,17 @@ class UserController {
         // レスポンス値を整形する
         $postData = $Validation->formatPostData($postData);
         // レスポンス値(整形後)のバリデーション
-        $error = $Validation->validationPostData($postData);
+        $error = $Validation->validate($postData);
 
         if (empty($error)) {
             if (isset($postData['btn_confirm'])) {
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
+                $Auth = new Auth();
                 $DBModel = new DBModel();
+
+                // パスワードのハッシュ化
+                $postData['password'] = $Auth->getHashedPassword($postData['password']);
                 if ($DBModel->registUser($postData) === true) {
                     $pageFlg = '1';
                 }

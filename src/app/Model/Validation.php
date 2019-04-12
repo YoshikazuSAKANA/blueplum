@@ -52,7 +52,7 @@ class Validation extends DBModel {
      * @param array $data
      * @return array $data
      */
-    public function validationPostData($data) {
+    public function validate($data) {
 
         // エラー文
         $error = array();
