@@ -1,0 +1,22 @@
+<html>
+<head>
+<title>ユーザー登録確認画面</title>
+</head>
+<body>
+
+<form action="/user/signup" method="post">
+<li><?=$postData['last_name']?></li>
+<li><?=$postData['first_name']?></li>
+<li><?=$postData['birthday']?></li>
+<li><?=$postData['mail_address']?></li>
+<li><?=$postData['password']?></li>
+<input type="hidden" name="last_name" value="<?=$postData['last_name']?>">
+<input type="hidden" name="first_name" value="<?=$postData['first_name']?>">
+<input type="hidden" name="birthday" value="<?=$postData['birthday']?>">
+<input type="hidden" name="mail_address" value="<?=$postData['mail_address']?>">
+<input type="hidden" name="password" value="<?=$postData['password']?>">
+<button type="submit" name="btn_signup">登録</button>
+</form>
+
+</body>
+</html>

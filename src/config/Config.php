@@ -89,6 +89,7 @@ define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
 require_once( _MODEL_DIR      . "/BaseModel.php");
 require_once( _MODEL_DIR      . "/DBModel.php");
 require_once( _MODEL_DIR      . "/Auth.php");
+require_once( _MODEL_DIR      . "/Validation.php");
 
 //----------------------------------------------------
 // ルーティング設定
@@ -96,12 +97,14 @@ require_once( _MODEL_DIR      . "/Auth.php");
 
 $conf = [
           ['GET', '/', 'IndexController', 'IndexAction'],
-          ['GET', '/signin', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signin.html'],
-          ['GET', '/signup', 'UserController', 'PageLoadAction', _VIEW_DIR . '/signup.html'],
+          ['GET', '/signin', null, 'PageLoadAction', _VIEW_DIR . '/signin.html'],
+          ['GET', '/signup', null, 'PageLoadAction', _VIEW_DIR . '/signup.html'],
+          ['GET', '/calendar', null, 'PageLoadAction', _VIEW_DIR . '/calendar.html'],
+          ['GET', '/error', null, 'PageLoadAction', _VIEW_DIR . '/error.html'],
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
-          ['GET', '/user/logout', 'UserController', 'LogoutAction']
+          ['GET', '/user/logout', 'UserController', 'LogoutAction'],
+          ['GET', '/mypage/:id', 'UserController', 'MyPageAction']
         ];
-
 

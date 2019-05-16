@@ -3,16 +3,23 @@
 <title>サインアップ</title>
 </head>
 <body>
-<form action="/user/signup" method="post">
+<?php foreach($error as $value): ?>
+・<font color="red"><?=$value?></font>
+<br>
+<?php endforeach; ?>
+<form name="signupForm" action="/user/signup" method="post">
 <p>姓：<br>
-<input type="text" name="last_name" value=""></p>
+<input type="text" name="last_name"></p>
 <p>名:<br>
-<input type="text" name="first_name" value=""></p>
+<input type="text" name="first_name"></p>
+<p>生年月日:<br>
+<input type="text" name="birthday" maxlength="10"></p>
 <p>メールアドレス:<br>
-<input type="text" name="mail_address" value=""></p>
+<input type="email" name="mail_address"></p>
 <p>パスワード：<br>
 <input type="password" name="password"></p>
-<button type="submit">登録</button>
+<button type="submit" name="btn_confirm">確認</button>
 </form>
+<script type="text/javascript" src="/js/signup.js"></script>
 </body>
 </html>

@@ -1,69 +1,69 @@
 <?php
 /**
- * Description of Auth
+ * ユーザー認証に関するクラス
  *
- * @author nagatayorinobu
+ * @author Yoshikazu Sakamoto
+ * @category Auth
+ * @package Model
  */
 class Auth {
     // セッションに関する処理
     private $authName; // 認証情報の格納先名
     private $sessName; // セッション名
 
-    public function setAuthname($name){
-        $this->authName = $name;
-    }
-    
-    public function getAuthname(){
-        return $this->authName;
-    }
-
-    public function setSessname($name){
-        $this->sessName = $name;
-    }
-    
-    public function getSessname(){
-        return $this->sessName;
-    }
-
+    /**
+     * セッションスタートを実行.
+     * セッション名を命名する
+     *
+     * @access public
+     * @return
+     */
     public function start(){
         // セッションが既に開始している場合は何もしない。
         if(session_status() ===  PHP_SESSION_ACTIVE){
             return;
         }
-        if($this->sessName != ""){
-            session_name($this->sessName);
-        }
         // セッション開始
+        session_name(_MEMBER_SESSNAME);
         session_start();
     }
     
-    // 認証情報の確認
+     /**
+      * セッション情報を確認
+      *
+      * @access public
+      */
     public function check(){
         if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['id'] >= 1){
             return true;
         }
     }
 
+     /**
+      * パスワードのハッシュ化
+      *
+      * @access public
+      * @param var $password
+      * @return int $hash
+      */
     public function getHashedPassword($password) {
-        // コストパラメーター
-        // 04 から 31 までの範囲 大きくなれば堅牢になりますが、システムに負荷がかかります。
-        $cost = 10;
 
-        // ランダムな文字列を生成します。
-        $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
-
-        // ソルトを生成します。
-        $salt = sprintf("$2y$%02d$", $cost) . $salt;
-
-        $hash = crypt($password, $salt);
-        
+        // ハッシュパスワードの生成
+        $hash = password_hash($password, PASSWORD_DEFAULT);
         return $hash;
     }
-    
-    
-    // パスワードが一致したらtrueを返します
-    public function checkPassword($password, $hashed_password){
-        if (crypt($password, $hashed_password) == $hashed_password ) {
+
+    /**
+      * パスワードの認証.
+      * ハッシュ化パスワードを戻し。認証
+      *
+      * @access public
+      * @param var $password
+      * @param hash $hashedPassword
+      * @return boolean パスワードが正しいかどうか
+      */
+    public function checkPassword($password, $hashedPassword){
+        if (password_verify($password, $hashedPassword)) {
             return true;
         }
     }
@@ -79,7 +79,11 @@ class Auth {
     }
     
 
-    // 認証情報を破棄
+    /**
+     * 認証情報を破棄.
+     * セッション、クッキーを破棄する
+     * @access public
+     */
     public function logout(){
         // セッション変数を空にする
         $_SESSION = [];
@@ -89,7 +93,6 @@ class Auth {
         if (ini_get("session.use_cookies")) {
             // セッションクッキーのパラメータを取得
             $params = session_get_cookie_params();
-print_r($params);
 
             setcookie(session_name(), '', time() + 42000,
                 $params["path"], $params["domain"],
@@ -97,13 +100,9 @@ print_r($params);
             );
         }
 
-print_r($params);
         // セッションを破壊
-//        session_destroy();
+        session_destroy();
     }
-
-// 
-
 
 }
 
