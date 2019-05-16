@@ -8,8 +8,13 @@
 /**
  * Description of BaseDbModel
  *
- * @author nagatayorinobu
+ * @author Yoshikazu Sakamoto
  */
 class BaseModel {
+
+    public function dispCalendar() {
+
+
+    }
 
 }

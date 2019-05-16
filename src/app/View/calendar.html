@@ -1,0 +1,61 @@
+<html>
+<head>
+<title>Calendar2019</title>
+</head>
+<body>
+<a href="/">トップへ</a>
+<br>
+
+<?php
+
+date_default_timezone_set('Asia/Tokyo');
+
+$targetYear = 2019;
+
+$weekName = ['日','月','火','水','木','金','土'];
+
+for ($month = 1; $month < 13; $month++) {
+
+    $day = 1;
+    // 月の初めの曜日を取得    
+    $monthFirstweek = date('w', mktime(0,0,0,$month,1,$targetYear));
+
+    // 月の最終日を取得
+    $monthTotalDate = date('t', mktime(0,0,0,$month,1,$targetYear));
+
+    if ($monthTotalDate + $monthFirstweek <= 35) {
+        $createWeekRow = 5;
+    } else {
+        $createWeekRow = 6;
+    }
+?>
+
+<b><?php echo $targetYear . "/" . $month; ?></b>
+
+<table border="1">
+
+<tr>
+  <?php foreach($weekName as $week): ?>
+    <th><?php echo $week; ?></th>
+  <?php endforeach; ?>
+</tr>
+
+<?php for($week = 1; $week <= $createWeekRow; $week++) { ?>
+<tr>
+  <?php for($i=1; $i <= 7; $i++) {
+    if (($week == "1" && $i <= $monthFirstweek) || ($day > $monthTotalDate)) { ?>
+      <td></td>
+    <?php continue; } ?>
+    <td><?php echo $day; $day++; ?></td>
+  <?php } ?>
+</tr>
+<?php } ?>
+
+</table>
+<br>
+<?php
+}
+?>
+
+</body>
+</html>

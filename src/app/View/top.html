@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head lang="ja">
 <meta charset="UTF-8">
@@ -11,17 +12,33 @@
   </div>
   <div class="td-header__action-holder">
     <ul class="header__actions">
+    <?php if (empty($_SESSION['user_name'])) { ?>
       <li class="header__action">
         <a href="/signin">ログイン</a>
       </li>
       <li class="header__action">
         <a href="/signup">サインアップ</a>
       </li>
+    <?php } else { ?>
+    <li class="header__action">
+        <a href="/user/logout">ログアウト</a>
+      </li>
+    <?php } ?>
     </ul>
   </div>
 </div>
-
 <a href="product/<?php echo $products['maker'] . $products['id']; ?>" ><?=$products['id']?></a>
 
+<?php if (!empty($_SESSION['user_name'])) { ?>
+<b><?=$_SESSION['user_name']?></b>さんようこそ
+<br>
+<a href="/mypage/<?=$_SESSION['user_id']?>">マイページ</a>
+<?php } ?>
+
+<a href="/calendar">カレンダー</a>
+2019/3/20　始動
+<p id="RealTimeClockArea"></p>
+<p id="LimitTimeArea"></p>
+<script type="text/javascript" src="/js/top.js"></script>
 </body>
 </html>
