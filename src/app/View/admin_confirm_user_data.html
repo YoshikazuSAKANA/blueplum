@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>ユーザー情報修正確認</title>
+</head>
+<body>
+<h3><b>確認</b></h3>
+<form action="/admin_update_user_data" method="post">
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>苗字</th>
+  <th>名前</th>
+  <th>メールアドレス</th>
+  <th>生年月日</th>
+</tr>
+<tr>
+  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['last_name'] ?></td>
+  <td><?= $userData['first_name'] ?></td>
+  <td><?= $userData['mail_address'] ?></td>
+  <td><?= $userData['birthday'] ?></td>
+</tr>
+</table>
+
+<input type="hidden" name="id" value="<?=$userData['id']?>">
+<input type="hidden" name="last_name" value="<?=$userData['last_name']?>">
+<input type="hidden" name="first_name" value="<?=$userData['first_name']?>">
+<input type="hidden" name="mail_address" value="<?=$userData['mail_address']?>">
+<input type="hidden" name="birthday" value="<?=$userData['birthday']?>">
+<button type="submit">更新</button>
+</form>
+</body>
+</html>

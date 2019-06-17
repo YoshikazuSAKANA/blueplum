@@ -1,0 +1,24 @@
+<?php
+if (isset($_SESSION['admin_flg'])) {
+?>
+<html>
+<head>
+<title>管理者トップ</title>
+</head>
+<body>
+<h3><b>管理者画面</b></h3>
+
+  <ul><a href="admin_regist">管理者作成</a></ul>
+  <ul><a href="admin_admin_list">管理者一覧</a></ul>
+  <ul><a href="admin_user_list">ユーザー一覧</a></ul>
+  <ul><a href="admin_item_list">商品一覧</a><ul>
+
+</body>
+</html>
+<?php
+} else {
+    header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
+    exit();
+}
+?>
+

@@ -1,0 +1,28 @@
+<html>
+<head>
+</head>
+<body>
+<h3><b>削除確認</b></h3>
+<form action="/admin_delete_user" method="post">
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>苗字</th>
+  <th>名前</th>
+  <th>メールアドレス</th>
+  <th>生年月日</th>
+</tr>
+<tr>
+  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['last_name'] ?></td>
+  <td><?= $userData['first_name'] ?></td>
+  <td><?= $userData['mail_address'] ?></td>
+  <td><?= $userData['birthday'] ?></td>
+</tr>
+</table>
+
+<input type="hidden" name="id" value="<?=$userData['id']?>">
+<button type="submit">削除</button>
+</form>
+</body>
+</html>

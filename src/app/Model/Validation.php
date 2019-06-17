@@ -52,7 +52,7 @@ class Validation extends DBModel {
      * @param array $data
      * @return array $data
      */
-    public function validate($data) {
+    public function validate($data, $updateFlg = 0) {
 
         // エラー文
         $error = array();
@@ -88,17 +88,27 @@ class Validation extends DBModel {
             $error[] = 'メールアドレスを入力してください';
         } elseif (!preg_match('/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/iD', $data['mail_address'])){
             $error[] =  'メールアドレスが正しくありません';
-        } elseif (parent::checkExistMailAddress($data['mail_address']) === false) {
+        } elseif (parent::checkExistMailAddress($data['mail_address']) === false && $updateFlg != 1) {
             $error[] = 'すでに同一のメールアドレスが存在します';
         }
 
         // パスワードチェック
+        if ($updateFlg != 1) {
+            $error[] = $this->validatePassword($data);
+        }
+
+        return $error;
+    }
+
+    public function validatePassword($data) {
+
+        // パスワードチェック
         if (empty($data['password'])) {
-            $error[] = 'パスワードを入力してください';
+            $error = 'パスワードを入力してください';
         } elseif (mb_strlen($data['password']) > 100) {
-            $error[] = 'パスワードは100文字以内にしてください';
+            $error = 'パスワードは100文字以内にしてください';
         } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data['password'])) {
-            $error[] = '英数字を含む8文字以上のパスワードにしてください';
+            $error = '英数字を含む8文字以上のパスワードにしてください';
         }
         return $error;
     }

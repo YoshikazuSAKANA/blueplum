@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>ユーザー一覧</title>
+</head>
+<body>
+<h3><b>ユーザー一覧</b></h3>
+
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>苗字</th>
+  <th>名前</th>
+  <th>メールアドレス</th>
+  <th></th>
+  <th></th>
+</tr>
+<?php foreach($userListData as $userData) :?>
+<tr>
+  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['last_name'] ?></td>
+  <td><?= $userData['first_name'] ?></td>
+  <td><?= $userData['mail_address'] ?></td>
+  <td><a href="/admin_user_data/<?= $userData['id']?>">修正</a></td>
+  <td><a href="/admin_delete_confirm_user/delete<?= $userData['id']?>">削除</a></td>
+</tr>
+<?php endforeach ?>
+</body>
+</html>

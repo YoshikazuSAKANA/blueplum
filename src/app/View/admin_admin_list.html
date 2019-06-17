@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>管理者ー一覧</title>
+</head>
+<body>
+<h3><b>管理者ー一覧</b></h3>
+
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>フラグ</th>
+</tr>
+<?php foreach($adminListData as $adminData) :?>
+<tr>
+  <td><?=$adminData['id'] ?></td>
+  <td><?=$adminData['admin_flg'] ?></td>
+</tr>
+<?php endforeach ?>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>ユーザ詳細</title>
+</head>
+<body>
+<h3><b>ユーザー修正</b></h3>
+
+<?php foreach($error as $value): ?>
+・<font color="red"><?=$value?></font>
+<br>
+<?php endforeach; ?>
+
+<table border="1">
+<tr>
+  <th>ID</th>
+  <th>苗字</th>
+  <th>名前</th>
+  <th>生年月日</th>
+  <th>メールアドレス</th>
+</tr>
+<tr>
+  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['last_name'] ?></td>
+  <td><?= $userData['first_name'] ?></td>
+  <td><?= $userData['birthday'] ?></td>
+  <td><?= $userData['mail_address'] ?></td>
+</tr>
+<form action="/admin_confirm_user_data" method="POST">
+<p>
+  苗字：<input type="text" name="last_name" value="<?= $userData['last_name'] ?>" size="50">
+</p>
+<p>
+  名前：<input type="text" name="first_name" value="<?= $userData['first_name'] ?>" size="50">
+</p>
+<p>
+  生年月日：<input type="text" name="birthday" value="<?= $userData['birthday'] ?>" size="50">
+</p>
+<p>
+  メールアドレス：<input type="text" name="mail_address" value="<?= $userData['mail_address'] ?>" size="50">
+</p>
+<p>
+<input type="submit" value="確認">
+</p>
+<input type="hidden" name="id" value="<?= $userData['id'] ?>">
+</form>
+</body>
+</html>

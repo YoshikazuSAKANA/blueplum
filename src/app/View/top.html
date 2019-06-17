@@ -27,7 +27,6 @@
     </ul>
   </div>
 </div>
-<a href="product/<?php echo $products['maker'] . $products['id']; ?>" ><?=$products['id']?></a>
 
 <?php if (!empty($_SESSION['user_name'])) { ?>
 <b><?=$_SESSION['user_name']?></b>さんようこそ
@@ -39,6 +38,8 @@
 2019/3/20　始動
 <p id="RealTimeClockArea"></p>
 <p id="LimitTimeArea"></p>
+<br>
+<a href="/admin_signin">管理者ログイン</a>
 <script type="text/javascript" src="/js/top.js"></script>
 </body>
 </html>

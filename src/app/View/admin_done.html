@@ -1,0 +1,15 @@
+<html>
+<head>
+</head>
+<body>
+<?= $doneMessage ?>
+<?php if (!empty($error)) {
+          foreach($error as $value) {
+?>
+・<?= $value ?>
+<?php }}
+?>
+<BR>
+<a href="/admin">TOPにもどる</a>
+</body>
+</html>
