@@ -90,6 +90,7 @@ require_once( _MODEL_DIR      . "/BaseModel.php");
 require_once( _MODEL_DIR      . "/DBModel.php");
 require_once( _MODEL_DIR      . "/Auth.php");
 require_once( _MODEL_DIR      . "/Validation.php");
+require_once( _MODEL_DIR      . "/AdminModel.php");
 
 //----------------------------------------------------
 // ルーティング設定
@@ -105,6 +106,17 @@ $conf = [
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
           ['GET', '/user/logout', 'UserController', 'LogoutAction'],
-          ['GET', '/mypage/:id', 'UserController', 'MyPageAction']
+          ['GET', '/mypage/:id', 'UserController', 'MyPageAction'],
+          ['GET', '/admin', null, 'PageLoadAction', _VIEW_DIR . '/admin_top.html'],
+          ['POST', '/admin', 'AdminController', 'SigninAction'],
+          ['POST', '/admin_regist', null, 'PageLoadAction', _VIEW_DIR . '/admin_regist.html'],
+          ['GET', '/admin_signin', null, 'PageLoadAction', _VIEW_DIR . '/admin_signin.html'],
+          ['GET', '/admin_user_list', 'AdminController', 'dispUserListAction'],
+          ['GET', '/admin_admin_list', 'AdminController', 'dispAdminListAction'],
+          ['GET', '/admin_user_data/:id', 'AdminController', 'dispUserDetailAction'],
+          ['POST', '/admin_confirm_user_data', 'AdminController', 'confirmUserDetailAction'],
+          ['POST', '/admin_update_user_data', 'AdminController', 'updateUserAction'],
+          ['GET', '/admin_delete_confirm_user/:id', 'AdminController', 'dispUserDetailAction'],
+          ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction']
         ];
 

@@ -8,7 +8,7 @@
  */
 class DBModel extends BaseModel {
 
-    private $pdo;
+    protected $pdo;
 
     /**
      * コンストラクタ.
@@ -17,7 +17,7 @@ class DBModel extends BaseModel {
      * @access public
      */
     public function __construct() {
-        $this->db_connect();
+        parent::db_connect();
     }
 
     /**

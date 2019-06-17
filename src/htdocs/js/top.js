@@ -1,4 +1,5 @@
-setInterval('showTimeLimit(2019,4,21)',1000);
+let _TD = '2019,6,22';
+setInterval('showTimeLimit(' + _TD + ')',1000);
 
 function showClock() {
     // 現在時刻を取得
