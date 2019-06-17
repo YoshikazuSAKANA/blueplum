@@ -55,7 +55,10 @@ class Validation extends DBModel {
     public function validate($data, $updateFlg = 0) {
 
         // エラー文
-        $error = array();
+        $error = null;
+
+        // パスワークチェック時のエラーメッセージ
+        $passwordErrorMsg = null;
 
         // 姓チェック
         if (empty($data['last_name'])) {
@@ -93,24 +96,23 @@ class Validation extends DBModel {
         }
 
         // パスワードチェック
-        if ($updateFlg != 1) {
-            $error[] = $this->validatePassword($data);
+        if (($updateFlg != 1) && (!empty($passwordErrorMsg = $this->validatePassword($data['password'])))) {
+            $error[] = $passwordErrorMsg;
         }
-
         return $error;
     }
 
     public function validatePassword($data) {
 
         // パスワードチェック
-        if (empty($data['password'])) {
-            $error = 'パスワードを入力してください';
-        } elseif (mb_strlen($data['password']) > 100) {
-            $error = 'パスワードは100文字以内にしてください';
-        } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data['password'])) {
-            $error = '英数字を含む8文字以上のパスワードにしてください';
+        if (empty($data)) {
+            return 'パスワードを入力してください';
+        } elseif (mb_strlen($data) > 100) {
+            return 'パスワードは100文字以内にしてください';
+        } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data)) {
+            return '英数字を含む8文字以上のパスワードにしてください';
         }
-        return $error;
+        return;
     }
 
 }

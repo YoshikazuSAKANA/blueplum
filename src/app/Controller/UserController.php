@@ -23,8 +23,8 @@ class UserController {
         $inputMailAddress = htmlspecialchars($_POST['mail_address'], ENT_QUOTES, 'UTF-8');
         $inputPassword = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
 
-        $DBModel = new DBModel();
-        $Auth = new Auth();
+        $DBModel = new DBModel;
+        $Auth = new Auth;
         $userData = $DBModel->getUserInfo($inputMailAddress);
 
         // メールアドレスとパスワードが正しいか確認
@@ -61,7 +61,7 @@ class UserController {
         $postData = array();
 
         // エラー文
-        $error = array();
+        $error;
 
         if (!empty($_POST)) {
             foreach($_POST as $key => $value) {
@@ -69,7 +69,7 @@ class UserController {
             }
         }
 
-        $Validation = new Validation();
+        $Validation = new Validation;
         // レスポンス値を整形する
         $postData = $Validation->formatPostData($postData);
         // レスポンス値(整形後)のバリデーション
@@ -79,8 +79,8 @@ class UserController {
             if (isset($postData['btn_confirm'])) {
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
-                $Auth = new Auth();
-                $DBModel = new DBModel();
+                $Auth = new Auth;
+                $DBModel = new DBModel;
 
                 // パスワードのハッシュ化
                 $postData['password'] = $Auth->getHashedPassword($postData['password']);
@@ -94,7 +94,7 @@ class UserController {
             } elseif (isset($postData['btn_signup'])) {
                 $pageFlg = '3';
             }
-        }
+        }echo "PF" . $pageFlg; print_r($error);
         switch($pageFlg) {
             // 登録フォーム確認
             case '0':
