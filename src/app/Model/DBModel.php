@@ -120,6 +120,7 @@ class DBModel extends BaseModel {
           $stmh->execute();
           $this->pdo->commit();
           echo "データを" . $stmh->rowCount() . "件挿入しました";
+          return true;
         } catch(PDOException $e) {
             $this->pdo->rollback();
             return false;

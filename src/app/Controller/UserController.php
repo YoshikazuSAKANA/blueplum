@@ -55,7 +55,7 @@ class UserController {
     public function SignupAction() {
 
         // 画面出しわけ
-        $pageFlg;
+        $pageFlg = '3';
 
         // ユーザー入力値
         $postData = array();
@@ -84,7 +84,8 @@ class UserController {
 
                 // パスワードのハッシュ化
                 $postData['password'] = $Auth->getHashedPassword($postData['password']);
-                if ($DBModel->registUser($postData) === true) {
+                if ($DBModel->registUser($postData)) {
+                    $Auth->sendMailToRegistUser($postData);
                     $pageFlg = '1';
                 }
             }
@@ -94,7 +95,7 @@ class UserController {
             } elseif (isset($postData['btn_signup'])) {
                 $pageFlg = '3';
             }
-        }echo "PF" . $pageFlg; print_r($error);
+        }
         switch($pageFlg) {
             // 登録フォーム確認
             case '0':

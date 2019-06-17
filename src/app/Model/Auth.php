@@ -85,6 +85,7 @@ class Auth {
      * @access public
      */
     public function logout(){
+
         // セッション変数を空にする
         $_SESSION = [];
 
@@ -102,6 +103,29 @@ class Auth {
 
         // セッションを破壊
         session_destroy();
+    }
+
+    /**
+     * 会員登録後にメール送信
+     * @access public
+     */
+    public function sendMailToRegistUser($userData){
+
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+
+        $mailAddress = $userData['mail_address'];
+        // タイトル
+        $subject = 'テストメール';
+
+        // 本文
+        $message = $userData['first_name'] . 'さん、会員登録ありがとうございます';
+
+        // ヘッダー
+        $headers = 'From: yoshikazu.sakamoto@gmail.com';
+
+        mb_send_mail($mailAddress, $subject, $message, $headers);
     }
 
 }
