@@ -13,7 +13,7 @@
   <th>生年月日</th>
 </tr>
 <tr>
-  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['user_id'] ?></td>
   <td><?= $userData['last_name'] ?></td>
   <td><?= $userData['first_name'] ?></td>
   <td><?= $userData['mail_address'] ?></td>
@@ -21,7 +21,7 @@
 </tr>
 </table>
 
-<input type="hidden" name="id" value="<?=$userData['id']?>">
+<input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
 <button type="submit">削除</button>
 </form>
 </body>

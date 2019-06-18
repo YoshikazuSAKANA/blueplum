@@ -33,7 +33,7 @@ class UserController {
 
             // セッションスタート
             $Auth->start();
-            $_SESSION['user_id'] = $userData['id'];
+            $_SESSION['user_id'] = $userData['user_id'];
             $_SESSION['user_name'] = $userData['first_name'];
             require_once(_VIEW_DIR . '/top.html');
         } else {
@@ -131,14 +131,14 @@ class UserController {
 
     /**
      * ユーザーのマイページを表示.
-     * ユーザーidを使用して、DBから値を抽出
+     * ユーザーIDを使用して、DBから値を抽出
      *
      * @access public
-     * @param int $id
+     * @param int $userId
      */
     public function MyPageAction($userId) {
         $DBModel = new DBModel;
-        if ($userData = $DBModel->getUserInfo($userId, 'id')) {
+        if ($userData = $DBModel->getUserInfo($userId, 'user_id')) {
             require_once(_VIEW_DIR . '/mypage.html');
         } else {
             require_once(_VIEW_DIR . '/error.html');

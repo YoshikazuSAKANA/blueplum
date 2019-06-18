@@ -42,15 +42,15 @@ class DBModel extends BaseModel {
      * 商品情報を抽出.
      *
      * @access public
-     * @param int $id
+     * @param int $car_id
      * @return array $result
      */
     public function searchProductDetail($id) {
 
         try {
-          $sql = 'SELECT * FROM cars WHERE id = :id ';
+          $sql = 'SELECT * FROM cars WHERE car_id = :car_id ';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':id', $id, PDO::PARAM_INT);
+          $stmh->bindValue(':car_id', $carId, PDO::PARAM_INT);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
         

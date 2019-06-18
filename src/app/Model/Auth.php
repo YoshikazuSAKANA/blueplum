@@ -34,7 +34,7 @@ class Auth {
       * @access public
       */
     public function check(){
-        if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['id'] >= 1){
+        if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['user_id'] >= 1){
             return true;
         }
     }
