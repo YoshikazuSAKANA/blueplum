@@ -123,7 +123,7 @@ class UserController {
      */
     public function LogoutAction() {
 
-        $auth = new auth();
+        $auth = new auth;
         $auth->logout();
 
         require_once(_VIEW_DIR . '/top.html');
@@ -137,11 +137,28 @@ class UserController {
      * @param int $id
      */
     public function MyPageAction($userId) {
-        $DBModel = new DBModel();
+        $DBModel = new DBModel;
         if ($userData = $DBModel->getUserInfo($userId, 'id')) {
             require_once(_VIEW_DIR . '/mypage.html');
         } else {
             require_once(_VIEW_DIR . '/error.html');
+        }
+    }
+
+    /**
+     * Ajax
+     *
+     * @access public
+     */
+    public function ajaxAction() {
+
+        $userId = $_POST['user_id'];
+        $entryTask = $_POST['entry_task'];
+        $DBModel = new DBModel;
+        if ($DBModel->entryTask($userId, $entryTask)) {
+            return $entryTask;
+        } else {
+            return false;
         }
     }
 

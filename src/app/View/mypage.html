@@ -1,6 +1,7 @@
 <html>
 <head>
 <title>マイページ</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
 <b>マイページ</b>
@@ -11,5 +12,22 @@
 <li><?=$userData['birthday']?></li>
 <li><?=$userData['mail_address']?></li>
 <a href="/">TOPにもどる</a>
+<br>
+<b>タスク</b>
+<input type="hidden" id="user_id" value="<?=$userData['id']?>">
+<input type="text" id="entry_task">
+<button id="button_entry_task">＋</button>
+
+<div class="result"></div>
+<input type="checkbox" name="task" value="1">
+タスク登録
+<input type="checkbox" name="task" value="1">
+画像登録（会員登録）
+<input type="checkbox" name="task" value="1">
+画像表示（マイページ）
+<br>
+<button id="ajax">完了</button>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
 </body>
 </html>

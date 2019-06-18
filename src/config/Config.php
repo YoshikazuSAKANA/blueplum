@@ -117,6 +117,7 @@ $conf = [
           ['POST', '/admin_confirm_user_data', 'AdminController', 'confirmUserDetailAction'],
           ['POST', '/admin_update_user_data', 'AdminController', 'updateUserAction'],
           ['GET', '/admin_delete_confirm_user/:id', 'AdminController', 'dispUserDetailAction'],
-          ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction']
+          ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction'],
+          ['POST', '/ajax.php', 'UserController', 'ajaxAction']
         ];
 

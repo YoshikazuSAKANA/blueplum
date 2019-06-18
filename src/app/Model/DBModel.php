@@ -153,4 +153,30 @@ class DBModel extends BaseModel {
         }
     }
 
+    /**
+     * メールアドレスを抽出.
+     *
+     * @access public
+     * @param var $entryTask
+     * @return boolen
+     * @throws PDOException
+     */
+    public function entryTask($userId, $entryTask) {
+
+        try {
+          $this->pdo->beginTransaction();
+          // 同一のメールアドレスが存在しないか確認
+          $sql = 'INSERT INTO member (user_id, task) VALUES (:user_id, :task)';
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_STR);
+          $stmh->bindValue(':task', $entryTask, PDO::PARAM_STR);
+          $stmh->execute();
+          $this->pdo->commit();
+          return true;
+        } catch(PDOException $e) {
+            echo "ERROR: " . $e->getMessage();
+            return false;
+        }
+    }
+
 }
