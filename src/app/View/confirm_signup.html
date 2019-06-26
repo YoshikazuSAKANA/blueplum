@@ -10,9 +10,11 @@
 <li><?=$postData['birthday']?></li>
 <li><?=$postData['mail_address']?></li>
 <li><?=$postData['password']?></li>
+<li><img src="<?=$uploadFile['image_path']?>" width="250" height="250">
 <input type="hidden" name="last_name" value="<?=$postData['last_name']?>">
 <input type="hidden" name="first_name" value="<?=$postData['first_name']?>">
 <input type="hidden" name="birthday" value="<?=$postData['birthday']?>">
+<input type="hidden" name="user_image" value="<?=$uploadFile['user_image']?>">
 <input type="hidden" name="mail_address" value="<?=$postData['mail_address']?>">
 <input type="hidden" name="password" value="<?=$postData['password']?>">
 <button type="submit" name="btn_signup">登録</button>

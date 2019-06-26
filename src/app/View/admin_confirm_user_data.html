@@ -11,6 +11,7 @@
   <th>苗字</th>
   <th>名前</th>
   <th>メールアドレス</th>
+  <th>顔写真</th>
   <th>生年月日</th>
 </tr>
 <tr>
@@ -18,6 +19,7 @@
   <td><?= $userData['last_name'] ?></td>
   <td><?= $userData['first_name'] ?></td>
   <td><?= $userData['mail_address'] ?></td>
+  <td><img src="<?=$uploadFile['image_path']?>" width="250" height="250"></td>
   <td><?= $userData['birthday'] ?></td>
 </tr>
 </table>
@@ -25,8 +27,9 @@
 <input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
 <input type="hidden" name="last_name" value="<?=$userData['last_name']?>">
 <input type="hidden" name="first_name" value="<?=$userData['first_name']?>">
-<input type="hidden" name="mail_address" value="<?=$userData['mail_address']?>">
 <input type="hidden" name="birthday" value="<?=$userData['birthday']?>">
+<input type="hidden" name="user_image" value="<?=$uploadFile['user_image']?>">
+<input type="hidden" name="mail_address" value="<?=$userData['mail_address']?>">
 <button type="submit">更新</button>
 </form>
 </body>

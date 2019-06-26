@@ -36,4 +36,26 @@ class BaseModel {
         return $pdo;
     }
 
+    public function uploadFile() {
+
+        //アップロード画像の詳細を格納
+        $file = [];
+
+        $fileTmpName = $_FILES['user_image']['tmp_name'];
+        $filePath = _TMP_DIR .  $_FILES['user_image']['name'];
+
+        if (move_uploaded_file($fileTmpName, $filePath)) {
+            $file['user_image'] = $_FILES['user_image']['name'];
+            $file['image_path'] = '/tmp/' . $_FILES['user_image']['name'];
+            $file['size'] = getimagesize($filePath);
+        }
+        return $file;
+    }
+
+    public function dispErrorPage($errorMessage) {
+
+        require_once(_VIEW_DIR . '/error.html');
+        exit();
+    }
+
 }

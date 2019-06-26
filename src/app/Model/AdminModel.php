@@ -20,12 +20,12 @@ class AdminModel extends BaseModel {
      * @param var $userId
      * @return array $result
      */
-    public function getAdminInfo($userId) {
+    public function getAdminInfo($adminId) {
 
         try {
-          $sql = 'SELECT * FROM admin WHERE user_id = :user_id ';
+          $sql = 'SELECT * FROM admin WHERE admin_id = :admin_id ';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':user_id', $userId, PDO::PARAM_STR);
+          $stmh->bindValue(':admin_id', $adminId, PDO::PARAM_STR);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
           return $result;
@@ -64,7 +64,7 @@ class AdminModel extends BaseModel {
     public function getUserDetail($userId) {
 
         try {
-          $sql = 'SELECT user_id, last_name,  first_name, mail_address, birthday FROM member WHERE user_id = :user_id';
+          $sql = 'SELECT user_id, last_name,  first_name, birthday, user_image, mail_address FROM member WHERE user_id = :user_id';
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':user_id', $userId, PDO::PARAM_INT);
           $stmh->execute();
@@ -85,7 +85,7 @@ class AdminModel extends BaseModel {
     public function getAdminList() {
 
         try {
-          $sql = 'SELECT user_id, admin_flg FROM admin';
+          $sql = 'SELECT admin_id, admin_flg FROM admin';
           $stmh = $this->pdo->prepare($sql);
           $stmh->execute();
           $result = $stmh->fetchAll(PDO::FETCH_ASSOC);
@@ -109,13 +109,15 @@ class AdminModel extends BaseModel {
           $sql = 'UPDATE member SET
                   first_name = :first_name,
                   last_name = :last_name,
-                  mail_address = :mail_address,
-                  birthday = :birthday WHERE user_id = :user_id';
+                  birthday = :birthday,
+                  user_image = :user_image,
+                  mail_address = :mail_address WHERE user_id = :user_id';
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':first_name', $userData['first_name'], PDO::PARAM_STR); 
           $stmh->bindValue(':last_name', $userData['last_name'], PDO::PARAM_STR); 
-          $stmh->bindValue(':mail_address', $userData['mail_address'], PDO::PARAM_STR); 
-          $stmh->bindValue(':birthday', $userData['birthday'], PDO::PARAM_STR); 
+          $stmh->bindValue(':birthday', $userData['birthday'], PDO::PARAM_STR);
+          $stmh->bindValue(':user_image', $userData['user_image'], PDO::PARAM_STR);
+          $stmh->bindValue(':mail_address', $userData['mail_address'], PDO::PARAM_STR);
           $stmh->bindValue(':user_id', $userData['user_id'], PDO::PARAM_INT); 
           $stmh->execute();
           $this->pdo->commit();

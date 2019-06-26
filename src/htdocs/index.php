@@ -16,6 +16,7 @@ if (isset($_COOKIE[_MEMBER_SESSNAME])) {
     session_start();
 }
 
+
 // ユーザーのルートを確保
 $dispatcher = new Dispatcher();
 $dispatcher->dispatch($conf);

@@ -1,33 +1,46 @@
-<html>
+<!DOCTYPE>
+<html lang="ja">
 <head>
-<title>マイページ</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>マイページ</title>
 </head>
 <body>
-<b>マイページ</b>
+<h3>マイページ</h3>
+<table border="1">
+<tr>
+<th>名前</th>
+<th>生年月日</th>
+<th>顔写真</th>
+<th>Email</th>
+</tr>
+<tr>
+<td><?php echo $userData['last_name'] . $userData['first_name']; ?></td>
+<td><?=$userData['birthday']?></td>
+<td><img src="http://os3-385-25562.vs.sakura.ne.jp/image/<?=$userData['user_image']?>" width="128" height="128">
+<td><?=$userData['mail_address']?></td>
+</table>
 <br>
-<b><?=$_SESSION['user_name']?></b>さんのページ
-<li><?=$userData['last_name']?></li>
-<li><?=$userData['first_name']?></li>
-<li><?=$userData['birthday']?></li>
-<li><?=$userData['mail_address']?></li>
+
+<form action="/user/done_task" method="POST">
+<b>現行タスク</b>
+<br>
+<?php if (!empty($userTask)) {
+          foreach($userTask as $array => $key) { ?> 
+<input type="checkbox" name="task_id[]" value="<?=$key['task_id']?>">
+<?=$key['task']?>
+<br>
+<?php }} ?>
+<button type="submit">完了</button>
+
+<br><br>
+
+<b>タスク追加</b>
+<br>
+<input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
+<input type="text" name="entry_task">
+<button type="submit" formaction="/entry_task">＋</button>
+</form>
+
 <a href="/">TOPにもどる</a>
-<br>
-<b>タスク</b>
-<input type="hidden" id="user_id" value="<?=$userData['user_id']?>">
-<input type="text" id="entry_task">
-<button id="button_entry_task">＋</button>
-
-<div class="result"></div>
-<input type="checkbox" name="task" value="1">
-タスク登録
-<input type="checkbox" name="task" value="1">
-画像登録（会員登録）
-<input type="checkbox" name="task" value="1">
-画像表示（マイページ）
-<br>
-<button id="ajax">完了</button>
-
-<script type="text/javascript" src="/js/jquery.js"></script>
 </body>
 </html>

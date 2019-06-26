@@ -129,7 +129,7 @@ class AdminController {
 
         // ユーザー削除かどうか
         if (strpos($userId, 'delete') !== false) {
-            $userId = substr($id, 6);
+            $userId = substr($userId, 6);
             $flg = 'delete';
         }
 
@@ -138,7 +138,6 @@ class AdminController {
             $AdminModel = new AdminModel;
             $userData = $AdminModel->getUserDetail($userId);
         }
-
         if (!empty($userData)) {
             if ($flg == 'update') {
                 require_once(_VIEW_DIR . '/admin_user_detail.html');
@@ -166,6 +165,8 @@ class AdminController {
         $Validation = new Validation;
         $error = $Validation->validate($userData, $updateFlg = 1);
         if (empty($error)) {
+            $BaseModel = new BaseModel;
+            $uploadFile = $BaseModel->uploadFile();
             require_once(_VIEW_DIR . '/admin_confirm_user_data.html');
         } else {
             require_once(_VIEW_DIR . '/admin_user_detail.html');
@@ -190,8 +191,10 @@ class AdminController {
 
         $doneMessage = "更新失敗しました";
         if (empty($error)) {
-            if ($AdminModel->updateUserData($userData) === true) {
-                $doneMessage = "更新完了しました";
+            if (rename('tmp/' . $userData['user_image'], 'image/' . $userData['user_image'])) {
+                if ($AdminModel->updateUserData($userData) === true) {
+                    $doneMessage = "更新完了しました";
+                }
             }
         }
         require_once(_VIEW_DIR . '/admin_done.html');

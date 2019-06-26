@@ -4,19 +4,19 @@ $(function() {
         $.ajax({
             url:'/ajax.php',
             type:'POST',
-            data: { 'entry_task':$('#entry_task').val()}
+            data: {
+                'user_id':$('#user_id').val(),
+                'entry_task':$('#entry_task').val()
+                  }
         })
         // Ajaxリクエスト成功時
         .done((data) => {
             $('.result').html(data);
-            console.log(data);
+            alert('タスク追加しました');
         })
+        // Ajaxリクエスト失敗
         .fail((data) => {
             $('.result').html(data);
-            console.log(data);
         })
-        .always((data) => {
-            alert('aaa');
-        });
     });
 });

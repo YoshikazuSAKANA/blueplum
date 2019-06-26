@@ -72,14 +72,35 @@ class DBModel extends BaseModel {
      */
     public function getUserInfo($userData, $dataType = 'mail_address') {
 
+        $userInfo = array();
+        $userTask = array();
         try {
           $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
 
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':'. $dataType, $userData, PDO::PARAM_STR);
           $stmh->execute();
-          $result = $stmh->fetch(PDO::FETCH_ASSOC);
-          return $result;
+          $userInfo = $stmh->fetch(PDO::FETCH_ASSOC);
+          if ($dataType != 'mail_address') {
+              $userInfo[] = $this->getUserTask($userInfo['user_id']);
+          }
+          return $userInfo;
+        } catch (PDOException $e) {
+          echo "ERROR: " . $e->getMessage();
+          return false;
+        }
+    }
+
+     public function getUserTask($userId) {
+
+        try {
+          $sql = 'SELECT task_id, task FROM task WHERE user_id = :user_id AND done_flg = 0'; 
+
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_INT);
+          $stmh->execute();
+          $userTask = $stmh->fetchAll(PDO::FETCH_ASSOC);
+          return $userTask;
         } catch (PDOException $e) {
           echo "ERROR: " . $e->getMessage();
           return false;
@@ -109,17 +130,17 @@ class DBModel extends BaseModel {
             throw new PDOException('同じメールアドレスが存在します');
         }
           // 入力情報をDBに登録
-          $sql = 'INSERT INTO member (last_name, first_name, birthday, mail_address, password) VALUES (:last_name, :first_name, :birthday, :mail_address, :password)';
+          $sql = 'INSERT INTO member (last_name, first_name, birthday, user_image, mail_address, password) VALUES (:last_name, :first_name, :birthday, :user_image, :mail_address, :password)';
 
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':last_name', $postData['last_name'], PDO::PARAM_STR);
           $stmh->bindValue(':first_name', $postData['first_name'], PDO::PARAM_STR);
           $stmh->bindValue(':birthday', $postData['birthday'], PDO::PARAM_STR);
+          $stmh->bindValue(':user_image', $postData['user_image'], PDO::PARAM_STR);
           $stmh->bindValue(':mail_address', $postData['mail_address'], PDO::PARAM_STR);
           $stmh->bindValue(':password', $postData['password'], PDO::PARAM_STR);
           $stmh->execute();
           $this->pdo->commit();
-          echo "データを" . $stmh->rowCount() . "件挿入しました";
           return true;
         } catch(PDOException $e) {
             $this->pdo->rollback();
@@ -154,7 +175,7 @@ class DBModel extends BaseModel {
     }
 
     /**
-     * メールアドレスを抽出.
+     * タスク追加
      *
      * @access public
      * @param var $entryTask
@@ -166,11 +187,37 @@ class DBModel extends BaseModel {
         try {
           $this->pdo->beginTransaction();
           // 同一のメールアドレスが存在しないか確認
-          $sql = 'INSERT INTO member (user_id, task) VALUES (:user_id, :task)';
+          $sql = 'INSERT INTO task (user_id, task) VALUES (:user_id, :task)';
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':user_id', $userId, PDO::PARAM_STR);
           $stmh->bindValue(':task', $entryTask, PDO::PARAM_STR);
           $stmh->execute();
+          $this->pdo->commit();
+          return true;
+        } catch(PDOException $e) {
+            parent::dispErrorPage($e->getMessage());
+        }
+    }
+
+    /**
+     * タスク完了
+     *
+     * @access public
+     * @param var $doneTask
+     * @return boolen
+     * @throws PDOException
+     */
+    public function doneTask($doneUserTask) {
+
+        try {
+          $this->pdo->beginTransaction();
+          foreach($doneUserTask as $value) {
+              $sql = "UPDATE task SET done_flg = 1 WHERE task_id = :task_id";
+
+              $stmh = $this->pdo->prepare($sql);
+              $stmh->bindValue(':task_id', $value, PDO::PARAM_INT);
+              $stmh->execute();
+          }
           $this->pdo->commit();
           return true;
         } catch(PDOException $e) {
