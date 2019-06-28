@@ -71,26 +71,28 @@ class UserController {
             }
         }
         $Validation = new Validation;
+
         // レスポンス値を整形する
         $postData = $Validation->formatPostData($postData);
+
         // レスポンス値(整形後)のバリデーション
         $error = $Validation->validate($postData);
 
         if (empty($error)) {
             if (isset($postData['btn_confirm'])) {
-                $BaseModel = new BaseModel;
-                $uploadFile = $BaseModel->uploadFile();
+                $uploadFile = (new BaseModel)->uploadFile();
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
-                $Auth = new Auth;
                 $DBModel = new DBModel;
-                if (rename('tmp/' . $postData['user_image'], 'image/' . $postData['user_image'])) {
-                    // パスワードのハッシュ化
-                    $postData['password'] = $Auth->getHashedPassword($postData['password']);
-                    if ($DBModel->registUser($postData)) {
-                        //$Auth->sendMailToRegistUser($postData);
-                        $pageFlg = '1';
-                    }
+                if (!empty($postData['user_image'])) {
+                    rename('tmp/' . $postData['user_image'], 'image/' . $postData['user_image']);
+                }
+                $Auth = new Auth;
+                // パスワードのハッシュ化
+                $postData['password'] = $Auth->getHashedPassword($postData['password']);
+                if ($DBModel->registUser($postData)) {
+                    // $Auth->sendMailToRegistUser($postData);
+                    $pageFlg = '1';
                 }
             }
         } else {
@@ -127,9 +129,7 @@ class UserController {
      */
     public function LogoutAction() {
 
-        $auth = new auth;
-        $auth->logout();
-
+        (new Auth)->logout();
         require_once(_VIEW_DIR . '/top.html');
     }
 
@@ -140,16 +140,20 @@ class UserController {
      * @access public
      * @param int $userId
      */
-    public function MyPageAction($userId) {
-
-        $DBModel = new DBModel;
-
+    public function MyPageAction($userId)
+    {
         // ユーザー情報抽出
-        $userData = (!empty($userId))? $DBModel->getUserInfo($userId, 'user_id') : null;
-
-        // ユーザーのタスク情報を格納
-        $userTask = $userData[0];
-        require_once(_VIEW_DIR . '/mypage.html');
+        if (
+            !empty($userId)
+            && isset($_SESSION['user_id'])
+            && $_SESSION['user_id'] == $userId
+        ) {
+            $userData = (new DBModel)->getUserInfo($userId, 'user_id');
+            require_once(_VIEW_DIR . '/mypage.html');
+        } else {
+            header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
+            exit();
+        }
     }
 
     /**
@@ -201,12 +205,11 @@ class UserController {
         if (isset($_POST['user_id'])) {
             $userId = htmlspecialchars($_POST['user_id'], ENT_QUOTES, 'UTF-8');
         }
-        if (!empty($_POST)) {
+        if (!empty($_POST['task_id'])) {
             foreach($_POST['task_id'] as  $value) {
                 $doneTaskId[] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
             }
-            $DBModel = new DBModel;
-            $DBModel->doneTask($doneTaskId);
+            new $DBModel->doneTask($doneTaskId);
         }
         $this->MyPageAction($userId);
     }

@@ -16,8 +16,9 @@ if (isset($_COOKIE[_MEMBER_SESSNAME])) {
     session_start();
 }
 
+// アクセスログ記述
+(new BaseModel)->writeAccessLog();
 
 // ユーザーのルートを確保
-$dispatcher = new Dispatcher();
-$dispatcher->dispatch($conf);
+(new Dispatcher)->dispatch($conf);
 

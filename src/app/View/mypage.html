@@ -24,8 +24,8 @@
 <form action="/user/done_task" method="POST">
 <b>現行タスク</b>
 <br>
-<?php if (!empty($userTask)) {
-          foreach($userTask as $array => $key) { ?> 
+<?php if (!empty($userData['USER_TASK'])) {
+        foreach($userData['USER_TASK'] as $array => $key) { ?>
 <input type="checkbox" name="task_id[]" value="<?=$key['task_id']?>">
 <?=$key['task']?>
 <br>

@@ -7,9 +7,18 @@
  * @package Model
  */
 class Auth {
-    // セッションに関する処理
-    private $authName; // 認証情報の格納先名
-    private $sessName; // セッション名
+
+    // 認証情報の格納先名
+    private $authName;
+
+    // セッション名
+    private $sessName;
+
+    // タイトル
+    CONST SUBJECT = 'テストメール';
+
+    // ヘッダー
+    CONST HEADERS = 'From: test_sakamoto_test@gmail.com';
 
     /**
      * セッションスタートを実行.
@@ -114,18 +123,14 @@ class Auth {
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
-
+        // メールアドレス
         $mailAddress = $userData['mail_address'];
-        // タイトル
-        $subject = 'テストメール';
 
         // 本文
         $message = $userData['first_name'] . 'さん、会員登録ありがとうございます';
 
-        // ヘッダー
-        $headers = 'From: yoshikazu.sakamoto@gmail.com';
-
-        mb_send_mail($mailAddress, $subject, $message, $headers);
+        // メール送信
+        mb_send_mail($mailAddress, self::SUBJECT, $message, self::HEADERS);
     }
 
 }

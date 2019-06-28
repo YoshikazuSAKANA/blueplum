@@ -3,12 +3,13 @@
 <head lang="ja">
 <meta charset="UTF-8">
 <title>todoist</title>
+<link rel="icon" href="http://os3-385-25562.vs.sakura.ne.jp/image/favicon.ico">
 <link rel="stylesheet" type="text/css" href="/css/top.css">
 </head>
 <body>
 <div class="header">
   <div class="td-brand">
-    <img alt="Todoist" class="td-header__logo" src="https://d3ptyyxy2at9ui.cloudfront.net/logo-todoist-b5b89f.svg">
+    <img alt="reiwa" src="http://os3-385-25562.vs.sakura.ne.jp/image/reiwa_happy.png" width="100" height="100">
   </div>
   <div class="td-header__action-holder">
     <ul class="header__actions">
@@ -32,11 +33,10 @@
 <b><?=$_SESSION['user_name']?></b>さんようこそ
 <br>
 <a href="/mypage/<?=$_SESSION['user_id']?>">マイページ</a>
-<?php } ?>
-
 <a href="/calendar">カレンダー</a>
 2019/3/20　始動
 <p id="RealTimeClockArea"></p>
+<?php } ?>
 <p id="LimitTimeArea"></p>
 <br>
 <a href="/admin_signin">管理者ログイン</a>

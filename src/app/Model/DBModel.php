@@ -57,6 +57,7 @@ class DBModel extends BaseModel {
           return $result; 
         } catch (PDOException $Exception) {
           echo "ERROR: " . $Exception->getMessage();
+          return false;
         }
     }
 
@@ -70,21 +71,23 @@ class DBModel extends BaseModel {
      * ログインか、マイページ遷移を判定
      * @return array $result
      */
-    public function getUserInfo($userData, $dataType = 'mail_address') {
+    public function getUserInfo($input, $dataType = 'mail_address') {
 
-        $userInfo = array();
-        $userTask = array();
+        // ユーザー個人情報
+        $userData = [];
+
+        $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
+
         try {
-          $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
-
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':'. $dataType, $userData, PDO::PARAM_STR);
+          $stmh->bindValue(':'. $dataType, $input, PDO::PARAM_STR);
           $stmh->execute();
-          $userInfo = $stmh->fetch(PDO::FETCH_ASSOC);
+          $userData = $stmh->fetch(PDO::FETCH_ASSOC);
           if ($dataType != 'mail_address') {
-              $userInfo[] = $this->getUserTask($userInfo['user_id']);
+              $userData['USER_TASK'] = $this->getUserTask($userData['user_id']);
+              unset($userData['password']);
           }
-          return $userInfo;
+          return $userData;
         } catch (PDOException $e) {
           echo "ERROR: " . $e->getMessage();
           return false;

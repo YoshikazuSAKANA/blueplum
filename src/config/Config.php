@@ -120,6 +120,7 @@ $conf = [
           ['GET', '/admin_delete_confirm_user/:id', 'AdminController', 'dispUserDetailAction'],
           ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction'],
           ['POST', '/entry_task', 'UserController', 'entryTaskAction'],
-          ['POST', '/user/done_task', 'UserController', 'doneUserTaskAction']
+          ['POST', '/user/done_task', 'UserController', 'doneUserTaskAction'],
+          ['GET', '/admin_test_cron', null, 'PageLoadAction', _VIEW_DIR . '/admin_test_cron.html']
         ];
 
