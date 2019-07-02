@@ -229,4 +229,9 @@ class DBModel extends BaseModel {
         }
     }
 
+    public static function dbmodel_callback_func() {
+
+        echo "DBModel is back!!";
+    }
+
 }

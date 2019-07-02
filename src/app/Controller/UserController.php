@@ -29,7 +29,7 @@ class UserController {
 
         // メールアドレスとパスワードが正しいか確認
         if ($inputMailAddress == $userData['mail_address'] && 
-            $Auth->checkPassword($inputPassword, $userData['password']) === true) {
+            $Auth::checkPassword($inputPassword, $userData['password']) === true) {
 
             // セッションスタート
             $Auth->start();
@@ -83,15 +83,16 @@ class UserController {
                 $uploadFile = (new BaseModel)->uploadFile();
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
-                $DBModel = new DBModel;
                 if (!empty($postData['user_image'])) {
                     rename('tmp/' . $postData['user_image'], 'image/' . $postData['user_image']);
                 }
                 $Auth = new Auth;
+                $DBModel = new DBModel;
                 // パスワードのハッシュ化
                 $postData['password'] = $Auth->getHashedPassword($postData['password']);
                 if ($DBModel->registUser($postData)) {
-                    // $Auth->sendMailToRegistUser($postData);
+                    // $Auth->sendMail($postData, 'toNoticeRegistMail');
+                    // $Auth->sendMail($postData, 'toUserRegistMail');
                     $pageFlg = '1';
                 }
             }

@@ -14,6 +14,9 @@ class Auth {
     // セッション名
     private $sessName;
 
+    // 会員登録通知メール先
+    public static $noticeMailAddress = 'huitawarosu@yahoo.co.jp';
+
     // タイトル
     CONST SUBJECT = 'テストメール';
 
@@ -83,7 +86,7 @@ class Auth {
         $_SESSION[$this->getAuthName()] = $userdata;
     }
 
-    public function authNo(){
+    public static function authNo(){
         return 'ユーザ名かパスワードが間違っています。'."\n";
     }
     
@@ -115,22 +118,41 @@ class Auth {
     }
 
     /**
-     * 会員登録後にメール送信
+     * メール送信 (callable)
      * @access public
      */
-    public function sendMailToRegistUser($userData){
+    public function sendMail($userData, $method){
 
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
-        // メールアドレス
-        $mailAddress = $userData['mail_address'];
+        self::$method($userData);
+    }
+
+    /**
+     * 会員登録後にメール送信
+     * @access public
+     */
+    public function toUserRegistMail($userData){
 
         // 本文
         $message = $userData['first_name'] . 'さん、会員登録ありがとうございます';
 
         // メール送信
-        mb_send_mail($mailAddress, self::SUBJECT, $message, self::HEADERS);
+        mb_send_mail($userData['mail_address'], self::SUBJECT, $message, self::HEADERS);
+    }
+
+    /**
+     * 会員登録後にメール送信
+     * @access public
+     */
+    public function toNoticeRegistMail($userData){
+
+        // 本文
+        $message = $userData['first_name'] . 'さんが会員登録しました';
+
+        // メール送信
+        mb_send_mail(static::$noticeMailAddress, self::SUBJECT, $message, self::HEADERS);
     }
 
 }

@@ -54,7 +54,7 @@ class BaseModel {
         exit();
     }
 
-    public function writeAccessLog() {
+    public function writeAccessLog($func = "") {
 
         // アクセス時刻
         $time = date("Y/m/d H:i");
@@ -79,6 +79,14 @@ class BaseModel {
             fputs($fp, $log);
             fclose($fp);
         }
+        if (!empty($func)) {
+            call_user_func($func);
+        }
+    }
+
+    public static function basemodel_callback_func() {
+
+        echo "BaseModel is back!!";
     }
 
 }
