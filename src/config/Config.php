@@ -121,6 +121,7 @@ $conf = [
           ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction'],
           ['POST', '/entry_task', 'UserController', 'entryTaskAction'],
           ['POST', '/user/done_task', 'UserController', 'doneUserTaskAction'],
-          ['GET', '/admin_test_cron', null, 'PageLoadAction', _VIEW_DIR . '/admin_test_cron.html']
+          ['GET', '/admin_test_cron', null, 'PageLoadAction', _VIEW_DIR . '/admin_test_cron.html'],
+          ['POST', '/search_book',  null, 'PageLoadAction', _VIEW_DIR . '/search_book.php']
         ];
 

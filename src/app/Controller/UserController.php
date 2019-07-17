@@ -210,7 +210,7 @@ class UserController {
             foreach($_POST['task_id'] as  $value) {
                 $doneTaskId[] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
             }
-            new $DBModel->doneTask($doneTaskId);
+            (new DBModel)->doneTask($doneTaskId);
         }
         $this->MyPageAction($userId);
     }

@@ -47,3 +47,4 @@ function showTimeLimit(tYear, tMonth, tDay) {
     let msg = targetDay + " まであと" + limitDay + "日" + limitHour + "時間" + limitMin + "分" + limitSec + "秒";
     document.getElementById("LimitTimeArea") . innerHTML = msg;
 }
+
