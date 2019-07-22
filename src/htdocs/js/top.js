@@ -1,4 +1,4 @@
-let _TD = '2019,6,22';
+let _TD = '2020,7,24';
 setInterval('showTimeLimit(' + _TD + ')',1000);
 
 function showClock() {
@@ -47,3 +47,4 @@ function showTimeLimit(tYear, tMonth, tDay) {
     let msg = targetDay + " まであと" + limitDay + "日" + limitHour + "時間" + limitMin + "分" + limitSec + "秒";
     document.getElementById("LimitTimeArea") . innerHTML = msg;
 }
+

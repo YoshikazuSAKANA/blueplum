@@ -7,9 +7,21 @@
  * @package Model
  */
 class Auth {
-    // セッションに関する処理
-    private $authName; // 認証情報の格納先名
-    private $sessName; // セッション名
+
+    // 認証情報の格納先名
+    private $authName;
+
+    // セッション名
+    private $sessName;
+
+    // 会員登録通知メール先
+    public static $noticeMailAddress = 'huitawarosu@yahoo.co.jp';
+
+    // タイトル
+    CONST SUBJECT = 'テストメール';
+
+    // ヘッダー
+    CONST HEADERS = 'From: test_sakamoto_test@gmail.com';
 
     /**
      * セッションスタートを実行.
@@ -34,7 +46,7 @@ class Auth {
       * @access public
       */
     public function check(){
-        if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['id'] >= 1){
+        if(!empty($_SESSION[$this->getAuthName()]) && $_SESSION[$this->getAuthName()]['user_id'] >= 1){
             return true;
         }
     }
@@ -74,7 +86,7 @@ class Auth {
         $_SESSION[$this->getAuthName()] = $userdata;
     }
 
-    public function authNo(){
+    public static function authNo(){
         return 'ユーザ名かパスワードが間違っています。'."\n";
     }
     
@@ -85,6 +97,7 @@ class Auth {
      * @access public
      */
     public function logout(){
+
         // セッション変数を空にする
         $_SESSION = [];
 
@@ -102,6 +115,44 @@ class Auth {
 
         // セッションを破壊
         session_destroy();
+    }
+
+    /**
+     * メール送信 (callable)
+     * @access public
+     */
+    public function sendMail($userData, $method){
+
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        self::$method($userData);
+    }
+
+    /**
+     * 会員登録後にメール送信
+     * @access public
+     */
+    public function toUserRegistMail($userData){
+
+        // 本文
+        $message = $userData['first_name'] . 'さん、会員登録ありがとうございます';
+
+        // メール送信
+        mb_send_mail($userData['mail_address'], self::SUBJECT, $message, self::HEADERS);
+    }
+
+    /**
+     * 会員登録後にメール送信
+     * @access public
+     */
+    public function toNoticeRegistMail($userData){
+
+        // 本文
+        $message = $userData['first_name'] . 'さんが会員登録しました';
+
+        // メール送信
+        mb_send_mail(static::$noticeMailAddress, self::SUBJECT, $message, self::HEADERS);
     }
 
 }

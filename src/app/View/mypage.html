@@ -1,15 +1,46 @@
-<html>
+<!DOCTYPE>
+<html lang="ja">
 <head>
-<title>マイページ</title>
+    <meta charset="UTF-8">
+    <title>マイページ</title>
 </head>
 <body>
-<b>マイページ</b>
+<h3>マイページ</h3>
+<table border="1">
+<tr>
+<th>名前</th>
+<th>生年月日</th>
+<th>顔写真</th>
+<th>Email</th>
+</tr>
+<tr>
+<td><?php echo $userData['last_name'] . $userData['first_name']; ?></td>
+<td><?=$userData['birthday']?></td>
+<td><img src="http://os3-385-25562.vs.sakura.ne.jp/image/<?=$userData['user_image']?>" width="128" height="128">
+<td><?=$userData['mail_address']?></td>
+</table>
 <br>
-<b><?=$_SESSION['user_name']?></b>さんのページ
-<li><?=$userData['last_name']?></li>
-<li><?=$userData['first_name']?></li>
-<li><?=$userData['birthday']?></li>
-<li><?=$userData['mail_address']?></li>
+
+<form action="/user/done_task" method="POST">
+<b>現行タスク</b>
+<br>
+<?php if (!empty($userData['USER_TASK'])) {
+        foreach($userData['USER_TASK'] as $array => $key) { ?>
+<input type="checkbox" name="task_id[]" value="<?=$key['task_id']?>">
+<?=$key['task']?>
+<br>
+<?php }} ?>
+<button type="submit">完了</button>
+
+<br><br>
+
+<b>タスク追加</b>
+<br>
+<input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
+<input type="text" name="entry_task">
+<button type="submit" formaction="/entry_task">＋</button>
+</form>
+
 <a href="/">TOPにもどる</a>
 </body>
 </html>

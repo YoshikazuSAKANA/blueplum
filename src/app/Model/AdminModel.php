@@ -17,15 +17,15 @@ class AdminModel extends BaseModel {
      * ログインORマイページ遷移時に使用するメソッド
      *
      * @access public
-     * @param var $id
+     * @param var $userId
      * @return array $result
      */
-    public function getAdminInfo($id) {
+    public function getAdminInfo($adminId) {
 
         try {
-          $sql = 'SELECT * FROM admin WHERE id = :id ';
+          $sql = 'SELECT * FROM admin WHERE admin_id = :admin_id ';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':id', $id, PDO::PARAM_STR);
+          $stmh->bindValue(':admin_id', $adminId, PDO::PARAM_STR);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
           return $result;
@@ -44,7 +44,7 @@ class AdminModel extends BaseModel {
     public function getUserList() {
 
         try {
-          $sql = 'SELECT id, last_name,  first_name, mail_address, birthday FROM member';
+          $sql = 'SELECT user_id, last_name,  first_name, mail_address, birthday FROM member';
           $stmh = $this->pdo->prepare($sql);
           $stmh->execute();
           $result = $stmh->fetchAll(PDO::FETCH_ASSOC);
@@ -61,12 +61,12 @@ class AdminModel extends BaseModel {
      * @access public
      * @return array $result
      */
-    public function getUserDetail($id) {
+    public function getUserDetail($userId) {
 
         try {
-          $sql = 'SELECT id, last_name,  first_name, mail_address, birthday FROM member WHERE id = :id';
+          $sql = 'SELECT user_id, last_name,  first_name, birthday, user_image, mail_address FROM member WHERE user_id = :user_id';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':id', $id, PDO::PARAM_INT);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_INT);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
           return $result;
@@ -85,7 +85,7 @@ class AdminModel extends BaseModel {
     public function getAdminList() {
 
         try {
-          $sql = 'SELECT id, admin_flg FROM admin';
+          $sql = 'SELECT admin_id, admin_flg FROM admin';
           $stmh = $this->pdo->prepare($sql);
           $stmh->execute();
           $result = $stmh->fetchAll(PDO::FETCH_ASSOC);
@@ -109,14 +109,16 @@ class AdminModel extends BaseModel {
           $sql = 'UPDATE member SET
                   first_name = :first_name,
                   last_name = :last_name,
-                  mail_address = :mail_address,
-                  birthday = :birthday WHERE id = :id';
+                  birthday = :birthday,
+                  user_image = :user_image,
+                  mail_address = :mail_address WHERE user_id = :user_id';
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':first_name', $userData['first_name'], PDO::PARAM_STR); 
           $stmh->bindValue(':last_name', $userData['last_name'], PDO::PARAM_STR); 
-          $stmh->bindValue(':mail_address', $userData['mail_address'], PDO::PARAM_STR); 
-          $stmh->bindValue(':birthday', $userData['birthday'], PDO::PARAM_STR); 
-          $stmh->bindValue(':id', $userData['id'], PDO::PARAM_INT); 
+          $stmh->bindValue(':birthday', $userData['birthday'], PDO::PARAM_STR);
+          $stmh->bindValue(':user_image', $userData['user_image'], PDO::PARAM_STR);
+          $stmh->bindValue(':mail_address', $userData['mail_address'], PDO::PARAM_STR);
+          $stmh->bindValue(':user_id', $userData['user_id'], PDO::PARAM_INT); 
           $stmh->execute();
           $this->pdo->commit();
           return true;
@@ -132,13 +134,13 @@ class AdminModel extends BaseModel {
      * @access public
      * @return array $result
      */
-    public function deleteUserData($id) {
+    public function deleteUserData($userId) {
 
         try {
           $this->pdo->beginTransaction();
-          $sql = 'DELETE FROM member WHERE id = :id';
+          $sql = 'DELETE FROM member WHERE user_id = :user_id';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':id', $id, PDO::PARAM_INT);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_INT);
           $stmh->execute();
           $this->pdo->commit();
           return true;

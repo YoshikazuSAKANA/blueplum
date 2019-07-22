@@ -42,21 +42,22 @@ class DBModel extends BaseModel {
      * 商品情報を抽出.
      *
      * @access public
-     * @param int $id
+     * @param int $car_id
      * @return array $result
      */
     public function searchProductDetail($id) {
 
         try {
-          $sql = 'SELECT * FROM cars WHERE id = :id ';
+          $sql = 'SELECT * FROM cars WHERE car_id = :car_id ';
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':id', $id, PDO::PARAM_INT);
+          $stmh->bindValue(':car_id', $carId, PDO::PARAM_INT);
           $stmh->execute();
           $result = $stmh->fetch(PDO::FETCH_ASSOC);
         
           return $result; 
         } catch (PDOException $Exception) {
           echo "ERROR: " . $Exception->getMessage();
+          return false;
         }
     }
 
@@ -70,16 +71,39 @@ class DBModel extends BaseModel {
      * ログインか、マイページ遷移を判定
      * @return array $result
      */
-    public function getUserInfo($userData, $dataType = 'mail_address') {
+    public function getUserInfo($input, $dataType = 'mail_address') {
+
+        // ユーザー個人情報
+        $userData = [];
+
+        $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
 
         try {
-          $sql = 'SELECT * FROM member WHERE ' . $dataType . ' = :' . $dataType;
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':'. $dataType, $input, PDO::PARAM_STR);
+          $stmh->execute();
+          $userData = $stmh->fetch(PDO::FETCH_ASSOC);
+          if ($dataType != 'mail_address') {
+              $userData['USER_TASK'] = $this->getUserTask($userData['user_id']);
+              unset($userData['password']);
+          }
+          return $userData;
+        } catch (PDOException $e) {
+          echo "ERROR: " . $e->getMessage();
+          return false;
+        }
+    }
+
+     public function getUserTask($userId) {
+
+        try {
+          $sql = 'SELECT task_id, task FROM task WHERE user_id = :user_id AND done_flg = 0'; 
 
           $stmh = $this->pdo->prepare($sql);
-          $stmh->bindValue(':'. $dataType, $userData, PDO::PARAM_STR);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_INT);
           $stmh->execute();
-          $result = $stmh->fetch(PDO::FETCH_ASSOC);
-          return $result;
+          $userTask = $stmh->fetchAll(PDO::FETCH_ASSOC);
+          return $userTask;
         } catch (PDOException $e) {
           echo "ERROR: " . $e->getMessage();
           return false;
@@ -109,17 +133,18 @@ class DBModel extends BaseModel {
             throw new PDOException('同じメールアドレスが存在します');
         }
           // 入力情報をDBに登録
-          $sql = 'INSERT INTO member (last_name, first_name, birthday, mail_address, password) VALUES (:last_name, :first_name, :birthday, :mail_address, :password)';
+          $sql = 'INSERT INTO member (last_name, first_name, birthday, user_image, mail_address, password) VALUES (:last_name, :first_name, :birthday, :user_image, :mail_address, :password)';
 
           $stmh = $this->pdo->prepare($sql);
           $stmh->bindValue(':last_name', $postData['last_name'], PDO::PARAM_STR);
           $stmh->bindValue(':first_name', $postData['first_name'], PDO::PARAM_STR);
           $stmh->bindValue(':birthday', $postData['birthday'], PDO::PARAM_STR);
+          $stmh->bindValue(':user_image', $postData['user_image'], PDO::PARAM_STR);
           $stmh->bindValue(':mail_address', $postData['mail_address'], PDO::PARAM_STR);
           $stmh->bindValue(':password', $postData['password'], PDO::PARAM_STR);
           $stmh->execute();
           $this->pdo->commit();
-          echo "データを" . $stmh->rowCount() . "件挿入しました";
+          return true;
         } catch(PDOException $e) {
             $this->pdo->rollback();
             return false;
@@ -150,6 +175,63 @@ class DBModel extends BaseModel {
         } catch(PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
+    }
+
+    /**
+     * タスク追加
+     *
+     * @access public
+     * @param var $entryTask
+     * @return boolen
+     * @throws PDOException
+     */
+    public function entryTask($userId, $entryTask) {
+
+        try {
+          $this->pdo->beginTransaction();
+          // 同一のメールアドレスが存在しないか確認
+          $sql = 'INSERT INTO task (user_id, task) VALUES (:user_id, :task)';
+          $stmh = $this->pdo->prepare($sql);
+          $stmh->bindValue(':user_id', $userId, PDO::PARAM_STR);
+          $stmh->bindValue(':task', $entryTask, PDO::PARAM_STR);
+          $stmh->execute();
+          $this->pdo->commit();
+          return true;
+        } catch(PDOException $e) {
+            parent::dispErrorPage($e->getMessage());
+        }
+    }
+
+    /**
+     * タスク完了
+     *
+     * @access public
+     * @param var $doneTask
+     * @return boolen
+     * @throws PDOException
+     */
+    public function doneTask($doneUserTask) {
+
+        try {
+          $this->pdo->beginTransaction();
+          foreach($doneUserTask as $value) {
+              $sql = "UPDATE task SET done_flg = 1 WHERE task_id = :task_id";
+
+              $stmh = $this->pdo->prepare($sql);
+              $stmh->bindValue(':task_id', $value, PDO::PARAM_INT);
+              $stmh->execute();
+          }
+          $this->pdo->commit();
+          return true;
+        } catch(PDOException $e) {
+            echo "ERROR: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public static function dbmodel_callback_func() {
+
+        echo "DBModel is back!!";
     }
 
 }

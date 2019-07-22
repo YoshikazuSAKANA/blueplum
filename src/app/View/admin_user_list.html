@@ -16,12 +16,12 @@
 </tr>
 <?php foreach($userListData as $userData) :?>
 <tr>
-  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['user_id'] ?></td>
   <td><?= $userData['last_name'] ?></td>
   <td><?= $userData['first_name'] ?></td>
   <td><?= $userData['mail_address'] ?></td>
-  <td><a href="/admin_user_data/<?= $userData['id']?>">修正</a></td>
-  <td><a href="/admin_delete_confirm_user/delete<?= $userData['id']?>">削除</a></td>
+  <td><a href="/admin_user_data/<?= $userData['user_id']?>">修正</a></td>
+  <td><a href="/admin_delete_confirm_user/delete<?= $userData['user_id']?>">削除</a></td>
 </tr>
 <?php endforeach ?>
 </body>

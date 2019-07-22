@@ -77,6 +77,7 @@ define( "_PHP_LIBS_DIR", _ROOT_DIR . "/library");
 define("_MODEL_DIR", _ROOT_DIR . "/app/Model");
 define("_VIEW_DIR", _ROOT_DIR . "/app/View");
 define("_CONTROLLER_DIR", _ROOT_DIR . "/app/Controller");
+define("_TMP_DIR", _ROOT_DIR . "/htdocs/tmp/");
 
 // 環境変数 
 define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
@@ -117,6 +118,10 @@ $conf = [
           ['POST', '/admin_confirm_user_data', 'AdminController', 'confirmUserDetailAction'],
           ['POST', '/admin_update_user_data', 'AdminController', 'updateUserAction'],
           ['GET', '/admin_delete_confirm_user/:id', 'AdminController', 'dispUserDetailAction'],
-          ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction']
+          ['POST', '/admin_delete_user', 'AdminController', 'deleteUserAction'],
+          ['POST', '/entry_task', 'UserController', 'entryTaskAction'],
+          ['POST', '/user/done_task', 'UserController', 'doneUserTaskAction'],
+          ['GET', '/admin_test_cron', null, 'PageLoadAction', _VIEW_DIR . '/admin_test_cron.html'],
+          ['POST', '/search_book',  null, 'PageLoadAction', _VIEW_DIR . '/search_book.php']
         ];
 

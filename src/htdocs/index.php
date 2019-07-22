@@ -16,7 +16,24 @@ if (isset($_COOKIE[_MEMBER_SESSNAME])) {
     session_start();
 }
 
-// ユーザーのルートを確保
-$dispatcher = new Dispatcher();
-$dispatcher->dispatch($conf);
+$minutes = 2;
 
+try {
+    if ($minutes % 2 == 0) {
+        // アクセスログ記述
+        $excFunction = 'DBModel::dbmodel_callback_func';
+    } else {
+        $excFunction = 'BaseModel::basemodel_callback_func';
+    }
+    $excFunction = null;
+
+  // アクセスログ記述 
+  (new BaseModel)->writeAccessLog($excFunction);
+
+  // ユーザーのルートを確保
+  (new Dispatcher)->dispatch($conf);
+
+} catch (Exception $e) {
+    $e->getMessage();
+    echo "エラー発生";
+}

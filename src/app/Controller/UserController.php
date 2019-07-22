@@ -23,17 +23,17 @@ class UserController {
         $inputMailAddress = htmlspecialchars($_POST['mail_address'], ENT_QUOTES, 'UTF-8');
         $inputPassword = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
 
-        $DBModel = new DBModel();
-        $Auth = new Auth();
+        $DBModel = new DBModel;
+        $Auth = new Auth;
         $userData = $DBModel->getUserInfo($inputMailAddress);
 
         // メールアドレスとパスワードが正しいか確認
         if ($inputMailAddress == $userData['mail_address'] && 
-            $Auth->checkPassword($inputPassword, $userData['password']) === true) {
+            $Auth::checkPassword($inputPassword, $userData['password']) === true) {
 
             // セッションスタート
             $Auth->start();
-            $_SESSION['user_id'] = $userData['id'];
+            $_SESSION['user_id'] = $userData['user_id'];
             $_SESSION['user_name'] = $userData['first_name'];
             require_once(_VIEW_DIR . '/top.html');
         } else {
@@ -55,36 +55,44 @@ class UserController {
     public function SignupAction() {
 
         // 画面出しわけ
-        $pageFlg;
+        $pageFlg = '3';
 
         // ユーザー入力値
         $postData = array();
 
+        $uploadFile = [];
+
         // エラー文
-        $error = array();
+        $error;
 
         if (!empty($_POST)) {
             foreach($_POST as $key => $value) {
                 $postData[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
             }
         }
+        $Validation = new Validation;
 
-        $Validation = new Validation();
         // レスポンス値を整形する
         $postData = $Validation->formatPostData($postData);
+
         // レスポンス値(整形後)のバリデーション
         $error = $Validation->validate($postData);
 
         if (empty($error)) {
             if (isset($postData['btn_confirm'])) {
+                $uploadFile = (new BaseModel)->uploadFile();
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
-                $Auth = new Auth();
-                $DBModel = new DBModel();
-
+                if (!empty($postData['user_image'])) {
+                    rename('tmp/' . $postData['user_image'], 'image/' . $postData['user_image']);
+                }
+                $Auth = new Auth;
+                $DBModel = new DBModel;
                 // パスワードのハッシュ化
                 $postData['password'] = $Auth->getHashedPassword($postData['password']);
-                if ($DBModel->registUser($postData) === true) {
+                if ($DBModel->registUser($postData)) {
+                    // $Auth->sendMail($postData, 'toNoticeRegistMail');
+                    // $Auth->sendMail($postData, 'toUserRegistMail');
                     $pageFlg = '1';
                 }
             }
@@ -102,7 +110,7 @@ class UserController {
                 break;
             // 登録完了
             case '1':
-                require_once(_VIEW_DIR . '/top.html');
+                require_once(_VIEW_DIR . '/done.html');
                 break;
             // 登録フォーム
             case '2':
@@ -122,26 +130,89 @@ class UserController {
      */
     public function LogoutAction() {
 
-        $auth = new auth();
-        $auth->logout();
-
+        (new Auth)->logout();
         require_once(_VIEW_DIR . '/top.html');
     }
 
     /**
      * ユーザーのマイページを表示.
-     * ユーザーidを使用して、DBから値を抽出
+     * ユーザーIDを使用して、DBから値を抽出
      *
      * @access public
-     * @param int $id
+     * @param int $userId
      */
-    public function MyPageAction($userId) {
-        $DBModel = new DBModel();
-        if ($userData = $DBModel->getUserInfo($userId, 'id')) {
+    public function MyPageAction($userId)
+    {
+        // ユーザー情報抽出
+        if (
+            !empty($userId)
+            && isset($_SESSION['user_id'])
+            && $_SESSION['user_id'] == $userId
+        ) {
+            $userData = (new DBModel)->getUserInfo($userId, 'user_id');
             require_once(_VIEW_DIR . '/mypage.html');
         } else {
-            require_once(_VIEW_DIR . '/error.html');
+            header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
+            exit();
         }
+    }
+
+    /**
+     * タスク追加(POSTver)
+     *
+     * @access public
+     */
+    public function entryTaskAction() {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST'
+           && !empty($_POST['user_id'])
+           && !empty($_POST['entry_task'])
+        ) {
+            $userId = htmlspecialchars($_POST['user_id'], ENT_QUOTES, 'UTF-8');
+            $entryTask = htmlspecialchars($_POST['entry_task'], ENT_QUOTES, 'UTF-8');
+            $DBModel = new DBModel;
+            $DBModel->entryTask($userId, $entryTask);
+        }
+        $this->MyPageAction($userId);
+    }
+
+    /**
+     * タスク追加(JSver)
+     *
+     * @access public
+     */
+    public function ajaxAction() {
+
+        $userId = $_POST['user_id'];
+        $entryTask = $_POST['entry_task'];
+        $DBModel = new DBModel;
+        if ($DBModel->entryTask($userId, $entryTask)) {
+            return $entryTask;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * タスク完了
+     *
+     * @access public
+     */
+    public function doneUserTaskAction() {
+
+        // 完了したタスクIDを格納
+        $doneTaskId = [];
+
+        if (isset($_POST['user_id'])) {
+            $userId = htmlspecialchars($_POST['user_id'], ENT_QUOTES, 'UTF-8');
+        }
+        if (!empty($_POST['task_id'])) {
+            foreach($_POST['task_id'] as  $value) {
+                $doneTaskId[] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+            }
+            (new DBModel)->doneTask($doneTaskId);
+        }
+        $this->MyPageAction($userId);
     }
 
 }

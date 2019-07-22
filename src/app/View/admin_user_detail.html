@@ -16,16 +16,21 @@
   <th>苗字</th>
   <th>名前</th>
   <th>生年月日</th>
+  <th>顔写真</th>
   <th>メールアドレス</th>
 </tr>
 <tr>
-  <td><?= $userData['id'] ?></td>
+  <td><?= $userData['user_id'] ?></td>
   <td><?= $userData['last_name'] ?></td>
   <td><?= $userData['first_name'] ?></td>
   <td><?= $userData['birthday'] ?></td>
+  <td><img src="/image/<?= $userData['user_image'] ?>" width="250" height="250"></td>
   <td><?= $userData['mail_address'] ?></td>
 </tr>
-<form action="/admin_confirm_user_data" method="POST">
+</table>
+<br>
+<form action="/admin_confirm_user_data" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="2097152 ">
 <p>
   苗字：<input type="text" name="last_name" value="<?= $userData['last_name'] ?>" size="50">
 </p>
@@ -35,13 +40,16 @@
 <p>
   生年月日：<input type="text" name="birthday" value="<?= $userData['birthday'] ?>" size="50">
 </p>
+<p>顔写真
+<input type="file" name="user_image">
+</p>
 <p>
   メールアドレス：<input type="text" name="mail_address" value="<?= $userData['mail_address'] ?>" size="50">
 </p>
 <p>
 <input type="submit" value="確認">
 </p>
-<input type="hidden" name="id" value="<?= $userData['id'] ?>">
+<input type="hidden" name="user_id" value="<?= $userData['user_id'] ?>">
 </form>
 </body>
 </html>

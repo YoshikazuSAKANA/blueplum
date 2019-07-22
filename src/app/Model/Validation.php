@@ -54,8 +54,14 @@ class Validation extends DBModel {
      */
     public function validate($data, $updateFlg = 0) {
 
+        // Email用正規表現
+        $pregMatchMailAddressContent = '/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/iD';
+
         // エラー文
-        $error = array();
+        $error = null;
+
+        // パスワークチェック時のエラーメッセージ
+        $passwordErrorMsg = null;
 
         // 姓チェック
         if (empty($data['last_name'])) {
@@ -76,41 +82,41 @@ class Validation extends DBModel {
             $error[] = '生年月日を入力してください';
         } else {
             list($y, $m, $d) = explode('/', $data['birthday']);
-            if (!checkdate($m, $d, $y)) {
+            if (!(is_numeric($y) && is_numeric($m) && is_numeric($d))) {
+                $error[] = '生年月日を正しく入力してください';
+            } elseif (!checkdate($m, $d, $y)) {
                 $error[] = '生年月日が存在しません';
             } elseif ($y < 1900) {
-                $error[] = '生年月日が正しくありません';
+                $error[] = '120歳以上の方はご登録できません';
             }
         }
 
         // メールアドレスチェック
         if (empty($data['mail_address'])) {
             $error[] = 'メールアドレスを入力してください';
-        } elseif (!preg_match('/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/iD', $data['mail_address'])){
+        } elseif (!preg_match($pregMatchMailAddressContent, $data['mail_address'])){
             $error[] =  'メールアドレスが正しくありません';
         } elseif (parent::checkExistMailAddress($data['mail_address']) === false && $updateFlg != 1) {
             $error[] = 'すでに同一のメールアドレスが存在します';
         }
 
         // パスワードチェック
-        if ($updateFlg != 1) {
-            $error[] = $this->validatePassword($data);
+        if (($updateFlg != 1) && (!empty($passwordErrorMsg = $this->validatePassword($data['password'])))) {
+            $error[] = $passwordErrorMsg;
         }
-
         return $error;
     }
 
     public function validatePassword($data) {
 
         // パスワードチェック
-        if (empty($data['password'])) {
-            $error = 'パスワードを入力してください';
-        } elseif (mb_strlen($data['password']) > 100) {
-            $error = 'パスワードは100文字以内にしてください';
-        } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data['password'])) {
-            $error = '英数字を含む8文字以上のパスワードにしてください';
+        if (empty($data)) {
+            return 'パスワードを入力してください';
+        } elseif (mb_strlen($data) > 100) {
+            return 'パスワードは100文字以内にしてください';
+        } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data)) {
+            return '英数字を含む8文字以上のパスワードにしてください';
         }
-        return $error;
     }
 
 }

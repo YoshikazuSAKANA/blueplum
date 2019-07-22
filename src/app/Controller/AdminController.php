@@ -19,12 +19,12 @@ class AdminController {
      */
     public function SigninAction() {
 
-        $id = htmlspecialchars($_POST['id'], ENT_QUOTES, 'UTF-8');
+        $adminId = htmlspecialchars($_POST['admin_id'], ENT_QUOTES, 'UTF-8');
         $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
 
         $AdminModel = new AdminModel;
         $Auth = new Auth;
-        $adminData = $AdminModel->getAdminInfo($id);
+        $adminData = $AdminModel->getAdminInfo($adminId);
 
         // パスワード認証（ハッシュ化パスワード戻す）
         if ($Auth->checkPassword($password, $adminData['password']) === true) {
@@ -119,7 +119,7 @@ class AdminController {
      *
      * @public
      */
-    public function dispUserDetailAction($id) {
+    public function dispUserDetailAction($userId) {
 
         // 更新OR削除フラグ
         $flg = 'update';
@@ -128,17 +128,16 @@ class AdminController {
         $userData = null;
 
         // ユーザー削除かどうか
-        if (strpos($id, 'delete') !== false) {
-            $id = substr($id, 6);
+        if (strpos($userId, 'delete') !== false) {
+            $userId = substr($userId, 6);
             $flg = 'delete';
         }
 
         // 数値チェック
-        if (is_numeric($id)) {
+        if (is_numeric($userId)) {
             $AdminModel = new AdminModel;
-            $userData = $AdminModel->getUserDetail($id);
+            $userData = $AdminModel->getUserDetail($userId);
         }
-
         if (!empty($userData)) {
             if ($flg == 'update') {
                 require_once(_VIEW_DIR . '/admin_user_detail.html');
@@ -166,6 +165,8 @@ class AdminController {
         $Validation = new Validation;
         $error = $Validation->validate($userData, $updateFlg = 1);
         if (empty($error)) {
+            $BaseModel = new BaseModel;
+            $uploadFile = $BaseModel->uploadFile();
             require_once(_VIEW_DIR . '/admin_confirm_user_data.html');
         } else {
             require_once(_VIEW_DIR . '/admin_user_detail.html');
@@ -190,8 +191,10 @@ class AdminController {
 
         $doneMessage = "更新失敗しました";
         if (empty($error)) {
-            if ($AdminModel->updateUserData($userData) === true) {
-                $doneMessage = "更新完了しました";
+            if (rename('tmp/' . $userData['user_image'], 'image/' . $userData['user_image'])) {
+                if ($AdminModel->updateUserData($userData) === true) {
+                    $doneMessage = "更新完了しました";
+                }
             }
         }
         require_once(_VIEW_DIR . '/admin_done.html');
@@ -204,12 +207,12 @@ class AdminController {
      */
     public function deleteUserAction() {
 
-        if (!empty($_POST['id'])) {
-            $id = htmlspecialchars($_POST['id'], ENT_QUOTES, 'UTF-8');
+        if (!empty($_POST['user_id'])) {
+            $userId = htmlspecialchars($_POST['user_id'], ENT_QUOTES, 'UTF-8');
         }
         $AdminModel = new AdminModel;
         $doneMessage = "削除に失敗しました";
-        if ($AdminModel->deleteUserData($id)) {
+        if ($AdminModel->deleteUserData($userId)) {
             $doneMessage = "削除完了しました";
         }
         require_once(_VIEW_DIR . '/admin_done.html');

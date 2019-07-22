@@ -3,17 +3,22 @@
 <title>サインアップ</title>
 </head>
 <body>
+<?php if (!empty($error)): ?>
 <?php foreach($error as $value): ?>
 ・<font color="red"><?=$value?></font>
 <br>
 <?php endforeach; ?>
-<form name="signupForm" action="/user/signup" method="post">
+<?php endif; ?>
+<form name="signupForm" action="/user/signup" method="post" enctype="multipart/form-data">
+<input type="hidden" name="MAX_FILE_SIZE" value="2097152 ">
 <p>姓：<br>
 <input type="text" name="last_name"></p>
 <p>名:<br>
 <input type="text" name="first_name"></p>
 <p>生年月日:<br>
 <input type="text" name="birthday" maxlength="10"></p>
+<p>顔写真</p>
+<input type="file" name="user_image">
 <p>メールアドレス:<br>
 <input type="email" name="mail_address"></p>
 <p>パスワード：<br>
