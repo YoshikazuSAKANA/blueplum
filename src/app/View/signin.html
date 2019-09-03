@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html>
-<head>
+<head lang="ja">
+<meta charset="UTF-8">
 <title>ログイン</title>
 </head>
 <body>
@@ -8,7 +10,13 @@
 <input type="text" name="mail_address" value=""></p>
 <p>パスワード：<br>
 <input type="password" name="password"></p>
+<?php if (!isset($accountLock) || $accountLock === false){ ?>
 <button type="submit">ログイン</button>
 </form>
+<?php } ?>
+<?php if (!empty($errorMessage)): ?>
+・<font color="red"><?=$errorMessage?></font>
+<br>
+<?php endif; ?>
 </body>
 </html>

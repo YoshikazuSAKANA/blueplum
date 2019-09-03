@@ -38,6 +38,7 @@ class Auth {
         // セッション開始
         session_name(_MEMBER_SESSNAME);
         session_start();
+        //session_regenerate_id();
     }
     
      /**
@@ -78,6 +79,7 @@ class Auth {
         if (password_verify($password, $hashedPassword)) {
             return true;
         }
+        return false;
     }
     
     // 認証情報の取得
@@ -96,7 +98,7 @@ class Auth {
      * セッション、クッキーを破棄する
      * @access public
      */
-    public function logout(){
+    public function logout():void{
 
         // セッション変数を空にする
         $_SESSION = [];
@@ -104,9 +106,9 @@ class Auth {
         // クッキーを削除
         // クッキーをクライアント側で保存しているかどうか
         if (ini_get("session.use_cookies")) {
+
             // セッションクッキーのパラメータを取得
             $params = session_get_cookie_params();
-
             setcookie(session_name(), '', time() + 42000,
                 $params["path"], $params["domain"],
                 $params["secure"], $params["httponly"]

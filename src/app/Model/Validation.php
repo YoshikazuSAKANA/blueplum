@@ -64,10 +64,8 @@ class Validation extends DBModel {
         $passwordErrorMsg = null;
 
         // 姓チェック
-        if (empty($data['last_name'])) {
-            $error[] = '姓を入力してください';
-        } else if (mb_strlen($data['last_name'] > 15)) {
-            $error[] = '姓を15文字以内にしてください';
+        if (preg_match($data['last_name'], '/A\[[:cntrl:]]{1,20}\z/') === 0) {
+            $error[] = '名前を入力してください';
         }
 
         // 名前チェック
@@ -114,7 +112,7 @@ class Validation extends DBModel {
             return 'パスワードを入力してください';
         } elseif (mb_strlen($data) > 100) {
             return 'パスワードは100文字以内にしてください';
-        } elseif (!preg_match('/\A(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}+\z/i', $data)) {
+        } elseif (!preg_match('/\A[a-z0-9]{8,100}\z/ui', $data)) {
             return '英数字を含む8文字以上のパスワードにしてください';
         }
     }

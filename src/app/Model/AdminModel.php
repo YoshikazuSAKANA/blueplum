@@ -1,6 +1,6 @@
 <?php
 
-class AdminModel extends BaseModel {
+class AdminModel extends DBModel {
 
     /**
      * コンストラクタ.
@@ -9,7 +9,7 @@ class AdminModel extends BaseModel {
      * @access public
      */
     public function __construct() {
-        parent::db_connect();
+        parent::dbConnect();
     }
 
     /**

@@ -1,4 +1,8 @@
 <?php
+
+date_default_timezone_set('Asia/Tokyo');
+require_once("/home/y/share/pear/secret.php");
+require_once("/home/y/share/pear/blueplum/src/common.php");
 /*************************************************
  * 初期設定ファイル
  *
@@ -23,7 +27,7 @@ define("_ROOT_DIR", "/home/y/share/pear/blueplum/src");
 define("_DB_USER", "admin");
 
 // データベース接続パスワード
-define("_DB_PASS", "Oniram_0622");
+define("_DB_PASS", _DB_PASSWORD);
 
 // データベースホスト名
 define("_DB_HOST", "os3-385-25562.vs.sakura.ne.jp");
@@ -81,7 +85,7 @@ define("_TMP_DIR", _ROOT_DIR . "/htdocs/tmp/");
 
 // 環境変数 
 define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
-
+define('_HEADERS', 'From: huitawarosu@yahoo.co.jp');
 
 //----------------------------------------------------
 // クラスファイルの読み込み
@@ -92,10 +96,13 @@ require_once( _MODEL_DIR      . "/DBModel.php");
 require_once( _MODEL_DIR      . "/Auth.php");
 require_once( _MODEL_DIR      . "/Validation.php");
 require_once( _MODEL_DIR      . "/AdminModel.php");
+require_once( _MODEL_DIR      . "/Logger.php");
+require_once( _MODEL_DIR      . "/UserModel.php");
+require_once( _MODEL_DIR      . "/UserDao.php");
 
 //----------------------------------------------------
 // ルーティング設定
-//--
+//---------------------------------------------------
 
 $conf = [
           ['GET', '/', 'IndexController', 'IndexAction'],
@@ -106,7 +113,7 @@ $conf = [
           ['POST', '/user/signin', 'UserController', 'SigninAction'],
           ['POST', '/user/signup', 'UserController', 'SignupAction'],
           ['GET', '/product/:id', 'ProductController', 'dispCarDetailAction'],
-          ['GET', '/user/logout', 'UserController', 'LogoutAction'],
+          ['POST', '/user/logout', 'UserController', 'LogoutAction'],
           ['GET', '/mypage/:id', 'UserController', 'MyPageAction'],
           ['GET', '/admin', null, 'PageLoadAction', _VIEW_DIR . '/admin_top.html'],
           ['POST', '/admin', 'AdminController', 'SigninAction'],
@@ -122,6 +129,12 @@ $conf = [
           ['POST', '/entry_task', 'UserController', 'entryTaskAction'],
           ['POST', '/user/done_task', 'UserController', 'doneUserTaskAction'],
           ['GET', '/admin_test_cron', null, 'PageLoadAction', _VIEW_DIR . '/admin_test_cron.html'],
-          ['POST', '/search_book',  null, 'PageLoadAction', _VIEW_DIR . '/search_book.php']
+          ['POST', '/search_book',  null, 'PageLoadAction', _VIEW_DIR . '/search_book.php'],
+          ['GET', '/api/search/zipcode/:zipcode', 'WebAPI', 'searchZipCodeAction'],
+          ['GET', '/test_curl', 'WebAPI', 'curlAction'],
+          ['GET', '/study', null, 'PageLoadAction', _VIEW_DIR . '/study.php'],
+          ['POST', '/study', null, 'PageLoadAction', _VIEW_DIR . '/study.php'],
+          ['GET', '/xss', null, 'PageLoadAction', _VIEW_DIR . '/xss.php'],
+          ['POST', '/xss', null, 'PageLoadAction', _VIEW_DIR . '/xss.php']
         ];
 
