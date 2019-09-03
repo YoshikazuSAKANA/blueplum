@@ -11,4 +11,37 @@ function slashBirthdayField () {
     }
 }
 
+function dispUserAddress() {
+
+    let postalCode = document.signupForm.user_postal_code.value;
+    if (postalCode.length == 7) {
+        let request = new XMLHttpRequest();
+        let url = "http://os3-385-25562.vs.sakura.ne.jp/api/search/zipcode/" + encodeURIComponent(postalCode);
+
+        request.onload = function (e) {
+            console.log("送信成功");
+            let response = JSON.parse(request.responseText);
+            console.log(response);
+            if (request.readyState === 4) {
+                if (request.status === 200) {
+                    document.signupForm.user_address.value = response['address'];
+                    console.log(request.message);
+                } else {
+                    console.error(request.status);
+                }
+            }
+        };
+        request.open('GET', url, true);
+        request.send();
+
+        request.onerror = function(e){
+                console.log("request.readyState:" + request.readyState);
+                console.log("送信に失敗");
+                alert("NG");
+        };
+    }
+}
+
 document.signupForm.birthday.addEventListener("input", slashBirthdayField);
+
+document.signupForm.user_postal_code.addEventListener("input", dispUserAddress);

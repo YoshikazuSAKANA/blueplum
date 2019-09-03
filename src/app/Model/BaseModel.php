@@ -12,24 +12,11 @@
  */
 class BaseModel {
 
-  protected $pdo;
+  protected $logger;
 
-    /**
-     * MySQLに接続.
-     * pdoイオブジェクトをインスタンス化
-     *
-     * @access public
-     */
-    public function db_connect() {
-     try {
-        $this->pdo = new PDO(_DSN,_DB_USER,_DB_PASS);
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-      } catch (PDOException $Exception) {
-          echo '接続エラー：' . $Exception->getMessage();
-          header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
-          exit();
-      }
+    public function __construct($logger) {
+
+        $this->logger = $logger;
     }
 
     public function uploadFile() {
@@ -46,12 +33,6 @@ class BaseModel {
             $file['size'] = getimagesize($filePath);
         }
         return $file;
-    }
-
-    public static function dispErrorPage($errorMessage) {
-
-        require_once(_VIEW_DIR . '/error.html');
-        exit();
     }
 
     public function writeAccessLog($func = "") {
@@ -71,9 +52,10 @@ class BaseModel {
         // ログ本文
         $log = $time .",  ". $ip . ",  ". $host. ",  ". $referer . PHP_EOL;
 
-        if ($ip == '36.2.79.66') {
-
+        if ($ip != '36.2.79.66') {
+            $message = 'OUT!';
             // ログ書き込み
+            $this->logger->log($message);
             $fileName = "/home/y/share/pear/blueplum/log/access_log.txt";
             $fp = fopen($fileName, "a");
             fputs($fp, $log);
@@ -89,4 +71,30 @@ class BaseModel {
         echo "BaseModel is back!!";
     }
 
+    public function getUserAddress($zipCode) {
+
+        $address = null;
+        // 現在時刻
+        $now = date('Y-m-d H:i:s');
+
+        // ZIPコード保存ファイル
+        $filename = '/home/y/share/pear/blueplum/tokyo_address.csv';
+
+        $handle = fopen($filename, 'r');
+        if ($handle) {
+            while($line = fgetcsv($handle)) {
+                if ($line[2] == $zipCode) {
+                    $address = $line[6] . $line[7] . $line[8];
+                    break;
+                }
+            }
+            fclose($handle);
+        }
+        if (empty($address)) {
+            $this->logger->log("{$now} [FAILED]  Get the zipcode: {$zipCode}");
+        } else {
+            $this->logger->log("{$now} [SUCCESS] Get the zipcode: {$zipCode}  {$address}");
+        }
+        return $address;
+    }
 }

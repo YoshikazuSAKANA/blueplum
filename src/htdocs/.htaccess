@@ -1,0 +1,4 @@
+order deny,allow
+#deny from  all
+#allow from 36.2.79.66
+#allow from 182.251.241.37

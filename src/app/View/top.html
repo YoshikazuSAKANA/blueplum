@@ -1,3 +1,20 @@
+<?php
+/*
+$url = 'http://weather.livedoor.com/forecast/webservice/json/v1?city=400040';
+// cURLセッションを初期化
+$curlHandle = curl_init();
+
+// cURL転送オプション設定
+curl_setopt($curlHandle, CURLOPT_URL, $url);
+curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+
+// cURLセッション実行
+$result = curl_exec($curlHandle);
+print_r(json_decode($result));
+// cURLセッション閉じる
+curl_close($curlHandle);
+*/
+?>
 <!DOCTYPE html>
 <html>
 <head lang="ja">
@@ -26,7 +43,10 @@
       </li>
     <?php } else { ?>
     <li class="header__action">
-        <a href="/user/logout">ログアウト</a>
+        <form name="logout" action="/user/logout" method="post">
+          <input type="hidden" name="token" value="<?php echo session_id(); ?>">
+          <a href="javascript:logout.submit()">ログアウト</a>
+        </form>
       </li>
     <?php } ?>
     </ul>
@@ -48,6 +68,10 @@
 <input type="text" name="author">
 <button type="submit">検索</button>
 </form>
+<br>
+<br>
+<a href="/study">学習一覧</a>
+
 <br>
 <a href="/admin_signin">管理者ログイン</a>
 <script type="text/javascript" src="/js/top.js"></script>

@@ -20,24 +20,48 @@ class UserController {
      */
     public function SigninAction() {
 
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/user_signin.txt');
+
         $inputMailAddress = htmlspecialchars($_POST['mail_address'], ENT_QUOTES, 'UTF-8');
-        $inputPassword = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+        $inputPassword    = htmlspecialchars($_POST['password'],     ENT_QUOTES, 'UTF-8');
 
-        $DBModel = new DBModel;
-        $Auth = new Auth;
-        $userData = $DBModel->getUserInfo($inputMailAddress);
+        $AuthModel = new Auth;
+        $objUserModel = new UserModel($logger);
+        try {
+          if ($objUserModel->getUserModelByMailAddress($inputMailAddress) === false) {
+              throw new Exception('ログインに失敗しました');
+          }
 
-        // メールアドレスとパスワードが正しいか確認
-        if ($inputMailAddress == $userData['mail_address'] && 
-            $Auth::checkPassword($inputPassword, $userData['password']) === true) {
+          // アカウントロックを確認
+          $accountLock = false;
+          if ($objUserModel->isAccountLock()) {
+              throw new Exception('アカウントはロックされています');
+              $accountLock = true;
+          }
 
-            // セッションスタート
-            $Auth->start();
-            $_SESSION['user_id'] = $userData['user_id'];
-            $_SESSION['user_name'] = $userData['first_name'];
-            require_once(_VIEW_DIR . '/top.html');
-        } else {
-            require_once(_VIEW_DIR . '/signin.html');
+          // パスワードを確認
+          if ($AuthModel->checkPassword($inputPassword, $objUserModel->getPassword()) === false) {
+
+              // ログイン失敗記録
+              $objUserModel->loginFailureIncrement();
+
+              // アカウント停止通知
+              $objUserModel->noticeAccountLock();
+
+              // ログインに失敗しました
+              throw new Exception('ログインに失敗しました');
+          }
+          // ログイン失敗情報リセット
+          $objUserModel->resetLoginInfo();
+
+          // セッションスタート
+          $AuthModel->start();
+          $_SESSION['user_id']   = $objUserModel->getUserId();
+          $_SESSION['user_name'] = $objUserModel->getFirstName();
+          require_once(_VIEW_DIR . '/top.html');
+        } catch(Exception $e) {
+          $errorMessage = $e->getMessage();
+          require_once(_VIEW_DIR . '/signin.html');
         }
     }
 
@@ -67,7 +91,13 @@ class UserController {
 
         if (!empty($_POST)) {
             foreach($_POST as $key => $value) {
-                $postData[$key] = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                // 制御文字以外で、０から100文字以内であるかどうか
+                if (preg_match('/\A[[:^cntrl:]]{0,100}\z/u', $value) === 1) {
+                    $postData[$key] = $value;
+                } else {
+                    die("予期せぬエラーが発生しました。");
+                }
             }
         }
         $Validation = new Validation;
@@ -130,8 +160,26 @@ class UserController {
      */
     public function LogoutAction() {
 
-        (new Auth)->logout();
-        require_once(_VIEW_DIR . '/top.html');
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/user_logout.log');
+        $token = (isset($_POST['token']))? htmlspecialchars($_POST['token'], ENT_QUOTES, 'UTF-8') : '';
+        $userId = htmlspecialchars($_SESSION['user_id'], ENT_QUOTES, 'UTF-8');
+
+        // CSRF対策の為、トークン発行済み
+        if (!empty($userId) && $token == session_id()) {
+
+            // ログアウト実行
+            (new Auth)->logout();
+
+            // ログ生成
+            $log = createLogoutMessage($userId);
+
+            // ログ出力
+            $logger->log($log);
+            require_once(_VIEW_DIR . '/top.html');
+        } else {
+            header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
+            exit();
+        }
     }
 
     /**
@@ -167,6 +215,7 @@ class UserController {
         if ($_SERVER['REQUEST_METHOD'] == 'POST'
            && !empty($_POST['user_id'])
            && !empty($_POST['entry_task'])
+           && session_id() == $_POST['token']
         ) {
             $userId = htmlspecialchars($_POST['user_id'], ENT_QUOTES, 'UTF-8');
             $entryTask = htmlspecialchars($_POST['entry_task'], ENT_QUOTES, 'UTF-8');
@@ -183,7 +232,7 @@ class UserController {
      */
     public function ajaxAction() {
 
-        $userId = $_POST['user_id'];
+        $userId    = $_POST['user_id'];
         $entryTask = $_POST['entry_task'];
         $DBModel = new DBModel;
         if ($DBModel->entryTask($userId, $entryTask)) {

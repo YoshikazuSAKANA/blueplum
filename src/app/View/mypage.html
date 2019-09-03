@@ -36,8 +36,9 @@
 
 <b>タスク追加</b>
 <br>
-<input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
 <input type="text" name="entry_task">
+<input type="hidden" name="user_id" value="<?=$userData['user_id']?>">
+<input type="hidden" name="token" value="<?=session_id()?>">
 <button type="submit" formaction="/entry_task">＋</button>
 </form>
 

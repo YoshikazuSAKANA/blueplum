@@ -19,6 +19,8 @@ class Dispatcher {
      */
     public function dispatch($conf) {
 
+        header('Content-Type: text/html; charset=UTF-8');
+
         // ユーザーの入力したURLを取得
         $url = $_SERVER['REQUEST_URI'];
 
