@@ -85,7 +85,6 @@ define("_TMP_DIR", _ROOT_DIR . "/htdocs/tmp/");
 
 // 環境変数 
 define( "_SCRIPT_NAME", $_SERVER['SCRIPT_NAME']);
-define('_HEADERS', 'From: huitawarosu@yahoo.co.jp');
 
 //----------------------------------------------------
 // クラスファイルの読み込み
