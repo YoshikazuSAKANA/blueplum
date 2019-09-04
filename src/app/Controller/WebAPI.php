@@ -13,7 +13,7 @@ class WebAPI implements API {
     public function searchZipCodeAction($zipCode) {
 
         // ログ出力ファイル
-        $logger = new FileLogger('/home/y/share/pear/blueplum/log/api.txt');
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/api.log');
 
         // 返却値の初期化
         $result = [];

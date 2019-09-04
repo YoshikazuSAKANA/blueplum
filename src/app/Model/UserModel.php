@@ -28,7 +28,7 @@ class UserModel {
     public function __construct($logger) {
 
         $this->logger = $logger;
-        $this->loggerPDO = new FileLogger('/home/y/share/pear/blueplum/log/pdo.txt');
+        $this->loggerPDO = new FileLogger('/home/y/share/pear/blueplum/log/pdo.log');
     }
 
     /**

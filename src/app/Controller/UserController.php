@@ -20,7 +20,7 @@ class UserController {
      */
     public function SigninAction() {
 
-        $logger = new FileLogger('/home/y/share/pear/blueplum/log/user_signin.txt');
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/user_signin.log');
 
         $inputMailAddress = htmlspecialchars($_POST['mail_address'], ENT_QUOTES, 'UTF-8');
         $inputPassword    = htmlspecialchars($_POST['password'],     ENT_QUOTES, 'UTF-8');
