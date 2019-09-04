@@ -29,11 +29,17 @@ try {
     }
     $excFunction = null;
 
-    // アクセスログ記述 
-    $logger = new FileLogger('/home/y/share/pear/blueplum/log/test.txt');
-    $logg = new DatabaseLogger();
-    $BaseModel = new BaseModel($logger);
-    $BaseModel->writeAccessLog($excFunction);
+    // IPアドレス
+    $ip = getenv("REMOTE_ADDR");
+
+    // アクセスログ記述
+    if ($ip != '36.2.79.66') {
+
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/test.txt');
+        $logg = new DatabaseLogger();
+        $BaseModel = new BaseModel($logger);
+        $BaseModel->writeAccessLog($ip, $excFunction);
+    }
 
     // ユーザーのルートを確保
     (new Dispatcher)->dispatch($conf);
