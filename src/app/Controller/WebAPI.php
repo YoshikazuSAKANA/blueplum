@@ -10,6 +10,29 @@ interface API {
 
 class WebAPI implements API {
 
+    public function searchItem() {
+
+        $api = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404';
+        $applicationId = '1025653256501622754';
+        $affiliateId = '1d009b0.0dfb50a9.18d009b1.13448471';
+        $params = [
+            'applicationId' => $applicationId,
+            'affiliateId'   => $affiliateId,
+            'author'        => $keyword,
+            'hits'          => 30,
+            'page'          => 9,
+            'carrier'       => 0,
+            'formatVersion' => 2,
+            'format'        => 'json',
+            'sort'          => 'sales'
+          ]
+          $query = http_biuld_quety($params);
+          $request = $api . '?' . $query;
+          $response = file_get_contents($request);
+          $reult = json_deconde($response);
+          return $result;
+        }
+
     public function searchZipCodeAction($zipCode) {
 
         // ログ出力ファイル
