@@ -7,30 +7,29 @@
 
 date_default_timezone_set('Asia/Tokyo');
 
-$week = [
-  '日', //0
-  '月', //1
-  '火', //2
-  '水', //3
-  '木', //4
-  '金', //5
-  '土', //6
-];
+$week = ['日', '月',  '火', '水', '木', '金', '土'];
 $weekNum = date('w');
-$nowDate = date("Y/m/d H:i:s");
+$today = date("m月d");
 
 // 取得するアクセスログの時間
 $getAccessErrorLog = date('Y/m/d H', strtotime("-1 hour"));
+
+// アクセスログ保存ファイル
 $file = '/home/y/share/pear/blueplum/log/access.log';
 
-$fp = fopen($file, 'r')
-while($line = fgets($fp)) {
+// 送信ログ
+$message = null;
+
+$fp = fopen($file, 'r');
+while ($line = fgets($fp)) {
     $accessErrorDateUntilHour = strstr($line, ':', true);
     if ($accessErrorDateUntilHour == $getAccessErrorLog) {
       $message .= "{$line}\n";
     }
 }
 
+$title = "{$getAccessErrorLog}時 アクセスログ";
+
 if (!empty($message)) {
-    mb_send_mail('koushi1105@gmail.com', "[{$nowDate}({$week[$weekNum]})]アクセスログ", $message, 'From: huitawarosu@yahoo.co.jp');
+    mb_send_mail('koushi1105@gmail.com', $title, $message, 'From: huitawarosu@yahoo.co.jp');
 }

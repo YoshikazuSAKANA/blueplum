@@ -40,14 +40,11 @@ class BaseModel {
         // アクセス時刻
         $time = date("Y/m/d H:i");
 
-        // ホスト名
-        $host = getenv("REMOTE_HOST");
-
         // リファラ
         $referer = !empty(getenv("HTTP_REFERER")) ?  getenv("HTTP_REFERER") : "NO_Referer";
 
         // ログ本文
-        $log = "{$time},  {$ip},  {$host},  {$referer}" . PHP_EOL;
+        $log = "{$time},  {$ip},  {$referer}" . PHP_EOL;
 
         // ログ書き込み
         $fileName = "/home/y/share/pear/blueplum/log/access.log";
