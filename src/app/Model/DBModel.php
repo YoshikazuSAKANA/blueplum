@@ -172,7 +172,6 @@ class DBModel {
      */
     public function entryTask($userId, $entryTask) {
 
-        // 同一のメールアドレスが存在しないか確認
         $sql = 'INSERT INTO task (user_id, task) VALUES (:user_id, :task)';
         try {
           $this->dbConnect();
