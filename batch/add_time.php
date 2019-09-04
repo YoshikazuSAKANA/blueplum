@@ -31,4 +31,6 @@ while($line = fgets($fp)) {
     }
 }
 
-mb_send_mail('koushi1105@gmail.com', "[{$nowDate}({$week[$weekNum]})]アクセスログ", $message, 'From: huitawarosu@yahoo.co.jp');
+if (!empty($message)) {
+    mb_send_mail('koushi1105@gmail.com', "[{$nowDate}({$week[$weekNum]})]アクセスログ", $message, 'From: huitawarosu@yahoo.co.jp');
+}
