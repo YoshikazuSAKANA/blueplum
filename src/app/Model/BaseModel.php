@@ -56,7 +56,7 @@ class BaseModel {
             $message = 'OUT!';
             // ログ書き込み
             $this->logger->log($message);
-            $fileName = "/home/y/share/pear/blueplum/log/access_log.txt";
+            $fileName = "/home/y/share/pear/blueplum/log/access.log";
             $fp = fopen($fileName, "a");
             fputs($fp, $log);
             fclose($fp);
