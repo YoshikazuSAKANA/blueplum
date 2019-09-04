@@ -35,13 +35,10 @@ class BaseModel {
         return $file;
     }
 
-    public function writeAccessLog($func = "") {
+    public function writeAccessLog($ip, $func = "") {
 
         // アクセス時刻
         $time = date("Y/m/d H:i");
-
-        // IPアドレス
-        $ip = getenv("REMOTE_ADDR");
 
         // ホスト名
         $host = getenv("REMOTE_HOST");
@@ -50,17 +47,14 @@ class BaseModel {
         $referer = !empty(getenv("HTTP_REFERER")) ?  getenv("HTTP_REFERER") : "NO_Referer";
 
         // ログ本文
-        $log = $time .",  ". $ip . ",  ". $host. ",  ". $referer . PHP_EOL;
+        $log = "{$time},  {$ip},  {$host},  {$referer}" . PHP_EOL;
 
-        if ($ip != '36.2.79.66') {
-            $message = 'OUT!';
-            // ログ書き込み
-            $this->logger->log($message);
-            $fileName = "/home/y/share/pear/blueplum/log/access.log";
-            $fp = fopen($fileName, "a");
-            fputs($fp, $log);
-            fclose($fp);
-        }
+        // ログ書き込み
+        $fileName = "/home/y/share/pear/blueplum/log/access.log";
+        $fp = fopen($fileName, "a");
+        fputs($fp, $log);
+        fclose($fp);
+
         if (!empty($func)) {
             call_user_func($func);
         }
