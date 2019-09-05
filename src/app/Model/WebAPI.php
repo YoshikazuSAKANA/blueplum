@@ -2,20 +2,44 @@
 
 interface WebAPI {
 
-    public function searchItem($author);
+    public function searchItem($itemName);
 
+}
+
+class Item {
+
+  public function execApi($api, $params){
+
+      $query = http_build_query($params);
+      $request = $api . $query;
+      return json_decode(file_get_contents($request), true);
+  }
 }
 
 class Rakuten implements WebAPI {
 
-    public function searchItem($author) {
+    CONST RAKUTEN_APP_ID = '1025653256501622754';
+
+    public function searchItem($itemName) {
+
+      $api = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?';
+      $params = [
+          'applicationId' => RAUTEN_APP_ID,
+          'keyword'       => $itemName,
+          'sort'          => '+affiliateRate'
+      ];
+      $Item = new Item();
+      $items = $Item->execApi($api, $params);
+      return $items;
+    }
+
+    public function getAuthorBooks($author) {
 
         $api = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?';
-        $applicationId = '1025653256501622754';
         $affiliateId = '1d009b0.0dfb50a9.18d009b1.13448471';
 
         $params = [
-            'applicationId' => $applicationId,
+            'applicationId' => RAKUTEN_APP_ID,
             'affiliateId'   => $affiliateId,
             'author'        => $author,
             'hits'          => 30,
@@ -25,9 +49,8 @@ class Rakuten implements WebAPI {
             'format'        => 'json',
             'sort'          => 'sales'
           ];
-          $query = http_build_query($params);
-          $request = $api . $query;
-          $rakutenContent = json_decode(file_get_contents($request), true);
+          $Item = new Item();
+          $rakutenContent = $Item->execApi($api, $params);
           $rakutenItem = [];
           $i = 0;
           foreach($rakutenContent['Items'] as $itemNumber => $items) {
@@ -43,7 +66,7 @@ class Rakuten implements WebAPI {
 
 class Yahoo implements WebAPI {
 
-    public function searchItem($author) {
+    public function searchItem($itemName) {
 
         $api = 'http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?';
         $appId = 'dj00aiZpPTJmVXg0SGhLVmVseSZzPWNvbnN1bWVyc2VjcmV0Jng9ZjY-';
@@ -52,12 +75,9 @@ class Yahoo implements WebAPI {
             'type'  => $author,
             'sort'  => '-sold'
         ];
-
-        $query = http_build_query($params);
-        $request = $api . $query;
-        $item = json_decode(file_get_contents($request));
+        $Item = new Item();
+        $item = $Item->execApi($api, $params);
         print_r($item);
     }
 
 }
-

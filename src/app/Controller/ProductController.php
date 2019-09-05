@@ -12,15 +12,17 @@ class ProductController {
 
         $Rakuten = new Rakuten();
         $author = mb_convert_kana(htmlspecialchars($_POST['author'], ENT_QUOTES, 'UTF-8'), 's');
-        $rakutenItem = $Rakuten->searchItem($author);
-        require_once(_VIEW_DIR . '/search_book.php');
+        $rakutenItem = $Rakuten->getAuthorBooks($author);
+        require_once(_VIEW_DIR . '/search_item.php');
     }
 
     public function searchItemAction() {
 
       $item = htmlspecialchars($_POST['item'], ENT_QUOTES, 'UTF-8');
       $Yahoo = new Yahoo();
-      $Yahoo->searchItem($item);
-      require_once(_VIEW_DIR . '/search_book.php');
+      $Rakuten = new Rakuten();
+      $itemYahoo   = $Yahoo->searchItem($item);
+      $rakutenItem = $Rakuten->searchItem($item);
+      require_once(_VIEW_DIR . '/search_item.php');
     }
 }
