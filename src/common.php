@@ -54,7 +54,7 @@ function returnJson($resultArray) {
  *
  * @return $file
  */
-public function uploadFile() {
+function uploadFile() {
 
     // アップロード画像の詳細を格納
     $file = [];

@@ -1,18 +1,14 @@
 <?php
 
-interface API {
+interface WebAPI {
 
-    public function getAuthorRakutenBooks($author);
-
-    public function searchZipCodeAction($zipCode);
-
-    public function returnJson($resultArray);
+    public function searchItem($author);
 
 }
 
-class WebAPI implements API {
+class Rakuten implements WebAPI {
 
-    public function getAuthorRakutenBooks($author) {
+    public function searchItem($author) {
 
         $api = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?';
         $applicationId = '1025653256501622754';
@@ -43,39 +39,26 @@ class WebAPI implements API {
     }
 
 
-    public function searchZipCodeAction($zipCode) {
+}
 
-        // ログ出力ファイル
-        $logger = new FileLogger('/home/y/share/pear/blueplum/log/api.log');
+class Yahoo implements WebAPI {
 
-        // 返却値の初期化
-        $result = [];
+    public function searchItem($author) {
 
-        try {
-          if (empty($zipCode)) {
-              throw new Exception("no zipcode...");
-          }
-          $BaseModel = new BaseModel($logger);
-          $address = $BaseModel->getUserAddress($zipCode);
-          if (!empty($address)) {
-              $result = [
-                'result'  => '200',
-                'address' => $address
-              ];
-          }
-        } catch(Exception $e) {
-            $result = [
-              'result'  => '200',
-              'message' => $e->getMessage()
-              ];
-        }
-        $this->returnJson($result);
+        $api = 'http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?';
+        $appId = 'dj00aiZpPTJmVXg0SGhLVmVseSZzPWNvbnN1bWVyc2VjcmV0Jng9ZjY-';
+        $params = [
+            'appid' => $appId,
+            'type'  => $author,
+            'sort'  => '-sold'
+        ];
+
+        $query = http_build_query($params);
+        $request = $api . $query;
+        $item = json_decode(file_get_contents($request));
+        print_r($item);
     }
 
-    public function returnJson($resultArray) {
-
-        echo json_encode($resultArray);
-        exit;
-    }
+}
 
 }
