@@ -21,4 +21,12 @@ class ProductController {
 
         require_once(_VIEW_DIR . '/detail.html');
     }
+
+    public function searchBooksAction() {
+
+        $API = new WebAPI();
+        $author = mb_convert_kana(htmlspecialchars($_POST['author'], ENT_QUOTES, 'UTF-8'), 's');
+        $rakutenItem = $API->getAuthorRakutenBooks($author);
+        require_once(_VIEW_DIR . '/search_book.php');
+    }
 }

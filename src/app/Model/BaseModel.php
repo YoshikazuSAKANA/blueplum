@@ -1,38 +1,16 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of BaseDbModel
+ * Description of BaseModel
  *
  * @author Yoshikazu Sakamoto
  */
 class BaseModel {
 
-  protected $logger;
+    protected $logger;
 
     public function __construct($logger) {
 
         $this->logger = $logger;
-    }
-
-    public function uploadFile() {
-
-        // アップロード画像の詳細を格納
-        $file = [];
-
-        $fileTmpName = $_FILES['user_image']['tmp_name'];
-        $filePath = _TMP_DIR .  $_FILES['user_image']['name'];
-
-        if (move_uploaded_file($fileTmpName, $filePath)) {
-            $file['user_image'] = $_FILES['user_image']['name'];
-            $file['image_path'] = '/tmp/' . $_FILES['user_image']['name'];
-            $file['size'] = getimagesize($filePath);
-        }
-        return $file;
     }
 
     public function writeAccessLog($ip, $func = "") {
@@ -62,30 +40,4 @@ class BaseModel {
         echo "BaseModel is back!!";
     }
 
-    public function getUserAddress($zipCode) {
-
-        $address = null;
-        // 現在時刻
-        $now = date('Y-m-d H:i:s');
-
-        // ZIPコード保存ファイル
-        $filename = '/home/y/share/pear/blueplum/tokyo_address.csv';
-
-        $handle = fopen($filename, 'r');
-        if ($handle) {
-            while($line = fgetcsv($handle)) {
-                if ($line[2] == $zipCode) {
-                    $address = $line[6] . $line[7] . $line[8];
-                    break;
-                }
-            }
-            fclose($handle);
-        }
-        if (empty($address)) {
-            $this->logger->log("{$now} [FAILED]  Get the zipcode: {$zipCode}");
-        } else {
-            $this->logger->log("{$now} [SUCCESS] Get the zipcode: {$zipCode}  {$address}");
-        }
-        return $address;
-    }
 }
