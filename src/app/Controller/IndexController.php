@@ -15,6 +15,6 @@ class IndexController {
      */    
     public function indexAction() {
 
-        require_once(_VIEW_DIR . '/top.html');
+        require_once(_VIEW_DIR . '/top.php');
     }
 }

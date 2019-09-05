@@ -1,5 +1,10 @@
 <?php
 
+function h($message) {
+
+    echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+}
+
 function createLogoutMessage($userId) {
 
     // ログアウト日時
@@ -68,4 +73,15 @@ function uploadFile() {
         $file['size'] = getimagesize($filePath);
     }
     return $file;
+}
+
+function execApi($api, $params){
+
+    // クエリ作成
+    $query = http_build_query($params);
+    $request = $api . $query;
+
+    // API実行
+    $response = json_decode(file_get_contents($request), true);
+    return $response;
 }

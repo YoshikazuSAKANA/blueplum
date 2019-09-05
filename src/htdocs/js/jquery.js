@@ -11,7 +11,7 @@ var keyword = '佐藤 優';
             data: {
                 'user_id':$('#user_id').val(),
                 'entry_task':$('#entry_task').val()
-                  }
+            }
         })
         // Ajaxリクエスト成功時
         .done((data) => {
@@ -24,6 +24,7 @@ var keyword = '佐藤 優';
         })
     });
 
+    // 著者の本売り上げランキング
     $('#search_book').on('click', function() {
         $.ajax({
             url:api,
@@ -38,7 +39,7 @@ var keyword = '佐藤 優';
 		'formatVersion' : 2,
 		'format'        : 'json',
 	        'sort'          : 'sales'
-                  }
+            }
         })
         // Ajaxリクエスト成功時
         .done((data) => {

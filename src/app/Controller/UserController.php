@@ -58,7 +58,7 @@ class UserController {
           $AuthModel->start();
           $_SESSION['user_id']   = $objUserModel->getUserId();
           $_SESSION['user_name'] = $objUserModel->getFirstName();
-          require_once(_VIEW_DIR . '/top.html');
+          require_once(_VIEW_DIR . '/top.php');
         } catch(Exception $e) {
           $errorMessage = $e->getMessage();
           require_once(_VIEW_DIR . '/signin.html');
@@ -175,7 +175,7 @@ class UserController {
 
             // ログ出力
             $logger->log($log);
-            require_once(_VIEW_DIR . '/top.html');
+            require_once(_VIEW_DIR . '/top.php');
         } else {
             header('Location: http://os3-385-25562.vs.sakura.ne.jp/error');
             exit();

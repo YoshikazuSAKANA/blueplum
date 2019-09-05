@@ -23,7 +23,7 @@ class UserModel {
     CONST LOCK_COUNT = 3;
 
     // アカウントロック時間
-    CONST LOCK_TIME = 30;
+    CONST LOCK_TIME = '-1 min';
 
     public function __construct($logger) {
 
@@ -91,7 +91,7 @@ class UserModel {
 
         // TimeStamp型に変換
         $strLastFailureTime = date("Y-m-d H:i:s", strtotime($lastFailureTime));
-        $srtAccountLockTime = date("Y-m-d H:i:s", strtotime('-1 min'));
+        $srtAccountLockTime = date("Y-m-d H:i:s", strtotime(self::LOCK_TIME));
 
         // 最終ログイン失敗日時が30分以内かつログイン失敗回数が3回以上
         if ($srtAccountLockTime < $strLastFailureTime && self::LOCK_COUNT <= $this->loginFailureCount) {

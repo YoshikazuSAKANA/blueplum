@@ -1,4 +1,14 @@
 <?php
+$sortKind = [
+    '標準'               => 'standard',
+    '売れている'         => 'sales',
+    '発売日(古い)'       => '+releaseDate',
+    '発売日(新しい)'     => '-releaseDate',
+    '価格が安い'         => '+itemPrice',
+    '価格が高い'         => '-itemPrice',
+    'レビュー件数が多い' => 'reviewCount',
+    'レビュー評価が高い' => 'reviewAverage'
+];
 /*
 $url = 'http://weather.livedoor.com/forecast/webservice/json/v1?city=400040';
 // cURLセッションを初期化
@@ -62,20 +72,26 @@ curl_close($curlHandle);
 <p id="RealTimeClockArea"></p>
 <?php } ?>
 <p id="LimitTimeArea"></p>
-<br>
+<b>著者で検索</b>
 <form action="/search_books" method="post">
-本検索（売上順）
 <input type="text" name="author">
+<?php foreach($sortKind as $key => $sort) : ?>
+<?php if ($sort == 'standard') { ?>
+<input type="radio" name="sort" value="standard" checked><font size="1">標準</font>
+<?php } else { ?>
+<input type="radio" name="sort" value="<?= h($sort) ?>"><font size="1"><?= $key ?></font>
+<?php } ?>
+<?php endforeach; ?>
 <button type="submit">検索</button>
 </form>
-<BR>
+<br>
+<b>商品検索（YAHOOと楽天）</b>
 <form action="search_item" method="POST">
 <input type="text" name="item">
+<button type="subimit">検索</button>
 </form>
-<br>
-<br>
+<br><br>
 <a href="/study">学習一覧</a>
-
 <br>
 <a href="/admin_signin">管理者ログイン</a>
 <script type="text/javascript" src="/js/top.js"></script>

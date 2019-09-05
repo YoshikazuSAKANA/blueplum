@@ -6,61 +6,57 @@ interface WebAPI {
 
 }
 
-class Item {
-
-  public function execApi($api, $params){
-
-      $query = http_build_query($params);
-      $request = $api . $query;
-      return json_decode(file_get_contents($request), true);
-  }
-}
-
 class Rakuten implements WebAPI {
-
-    CONST RAKUTEN_APP_ID = '1025653256501622754';
 
     public function searchItem($itemName) {
 
       $api = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?';
       $params = [
-          'applicationId' => RAUTEN_APP_ID,
+          'applicationId' => _RAKUTEN_APP_ID,
           'keyword'       => $itemName,
-          'sort'          => '+affiliateRate'
+          'sort'          => urlencode('standard')
       ];
-      $Item = new Item();
-      $items = $Item->execApi($api, $params);
-      return $items;
+      // API実行
+      $response = execApi($api, $params);
+
+      foreach($response['Items'] as $items => $itemNumber) {
+          $item[] = new Item(
+              $itemNumber['Item']['itemName'],
+              $itemNumber['Item']['itemPrice'],
+              $itemNumber['Item']['mediumImageUrls'][0]['imageUrl'],
+              'rakuten'
+          );
+      }
+      return $item;
     }
 
-    public function getAuthorBooks($author) {
+    public function getAuthorBook($author, $sort) {
 
         $api = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?';
-        $affiliateId = '1d009b0.0dfb50a9.18d009b1.13448471';
 
         $params = [
-            'applicationId' => RAKUTEN_APP_ID,
-            'affiliateId'   => $affiliateId,
+            'applicationId' => _RAKUTEN_APP_ID,
+            'affiliateId'   => _RAKUTEN_AFL_ID,
             'author'        => $author,
             'hits'          => 30,
             'page'          => 9,
             'carrier'       => 0,
             'formatVersion' => 2,
             'format'        => 'json',
-            'sort'          => 'sales'
-          ];
-          $Item = new Item();
-          $rakutenContent = $Item->execApi($api, $params);
-          $rakutenItem = [];
-          $i = 0;
-          foreach($rakutenContent['Items'] as $itemNumber => $items) {
-              $rakutenItem[$i]['title'] = $items['title'];
-              $rakutenItem[$i]['image'] = $items['mediumImageUrl'];
-              $i++;
-          }
-          return $rakutenItem;
-    }
+            'sort'          => urlencode($sort)
+        ];
+        $response = execApi($api, $params);
 
+        foreach($response['Items'] as $items => $itemNumber) {
+            $item[] = new Item(
+              $itemNumber['title'],
+              $itemNumber['itemPrice'],
+              $itemNumber['mediumImageUrl'],
+              'rakuten'
+            );
+        }
+        return $item;
+    }
 
 }
 
@@ -68,16 +64,31 @@ class Yahoo implements WebAPI {
 
     public function searchItem($itemName) {
 
-        $api = 'http://shopping.yahooapis.jp/ShoppingWebService/V1/itemSearch?';
-        $appId = 'dj00aiZpPTJmVXg0SGhLVmVseSZzPWNvbnN1bWVyc2VjcmV0Jng9ZjY-';
+        $api = 'https://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?';
         $params = [
-            'appid' => $appId,
-            'type'  => $author,
-            'sort'  => '-sold'
+            'appid'  =>_YAHOO_APP_ID,
+            'query'  => $itemName,
+            'hits'   => 2
         ];
-        $Item = new Item();
-        $item = $Item->execApi($api, $params);
-        print_r($item);
+        
+        $response = execApi($api, $params);
+        return $item;
+    }
+}
+
+class Item {
+
+    public $name;
+    public $price;
+    public $image;
+    public $site;
+
+    public function __construct($name, $price, $image, $site) {
+
+        $this->name  = $name;
+        $this->price = $price;
+        $this->image = $image;
+        $this->site  = $site;
     }
 
 }
