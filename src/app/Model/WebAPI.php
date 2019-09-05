@@ -61,4 +61,3 @@ class Yahoo implements WebAPI {
 
 }
 
-}
