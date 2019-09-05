@@ -165,8 +165,7 @@ class AdminController {
         $Validation = new Validation;
         $error = $Validation->validate($userData, $updateFlg = 1);
         if (empty($error)) {
-            $BaseModel = new BaseModel;
-            $uploadFile = $BaseModel->uploadFile();
+            $uploadFile = uploadFile();
             require_once(_VIEW_DIR . '/admin_confirm_user_data.html');
         } else {
             require_once(_VIEW_DIR . '/admin_user_detail.html');

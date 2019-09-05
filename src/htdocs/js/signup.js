@@ -16,7 +16,7 @@ function dispUserAddress() {
     let postalCode = document.signupForm.user_postal_code.value;
     if (postalCode.length == 7) {
         let request = new XMLHttpRequest();
-        let url = "http://os3-385-25562.vs.sakura.ne.jp/api/search/zipcode/" + encodeURIComponent(postalCode);
+        let url = "http://os3-385-25562.vs.sakura.ne.jp/search_zipcode/" + encodeURIComponent(postalCode);
 
         request.onload = function (e) {
             console.log("送信成功");

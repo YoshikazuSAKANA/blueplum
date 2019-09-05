@@ -2,14 +2,34 @@
 /*
  * クローン実行ファイル.
  * 1時間毎に指定ファイルに時間を書き出すだけの不毛ファイル
- *
+ * X時59分に実行
  */
 
 date_default_timezone_set('Asia/Tokyo');
 
-$file = '/home/y/share/pear/blueplum/src/app/View/admin_test_cron.html';
+$week = ['日', '月',  '火', '水', '木', '金', '土'];
+$weekNum = date('w');
+$today = date("m月d");
 
-$current = file_get_contents($file);
-$current .= date("Y-m-d H:i:s") . "<BR>";
+// 取得するアクセスログの時間
+$getAccessErrorLog = date('Y/m/d H', strtotime("-1 hour"));
 
-//file_put_contents($file, $current);
+// アクセスログ保存ファイル
+$file = '/home/y/share/pear/blueplum/log/access.log';
+
+// 送信ログ
+$message = null;
+
+$fp = fopen($file, 'r');
+while ($line = fgets($fp)) {
+    $accessErrorDateUntilHour = strstr($line, ':', true);
+    if ($accessErrorDateUntilHour == $getAccessErrorLog) {
+      $message .= "{$line}\n";
+    }
+}
+
+$title = "{$getAccessErrorLog}時 アクセスログ";
+
+if (!empty($message)) {
+    mb_send_mail('koushi1105@gmail.com', $title, $message, 'From: huitawarosu@yahoo.co.jp');
+}

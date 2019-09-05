@@ -110,7 +110,7 @@ class UserController {
 
         if (empty($error)) {
             if (isset($postData['btn_confirm'])) {
-                $uploadFile = (new BaseModel)->uploadFile();
+                $uploadFile = uploadFile();
                 $pageFlg = '0';
             } elseif (isset($postData['btn_signup'])) {
                 if (!empty($postData['user_image'])) {
@@ -226,20 +226,38 @@ class UserController {
     }
 
     /**
-     * タスク追加(JSver)
+     * ZIPCODEに紐づく住所を取得する
      *
      * @access public
+     * @param $zipCode
+     * @return $resultArray
      */
-    public function ajaxAction() {
+    public function searchZipCodeAction($zipCode) {
 
-        $userId    = $_POST['user_id'];
-        $entryTask = $_POST['entry_task'];
-        $DBModel = new DBModel;
-        if ($DBModel->entryTask($userId, $entryTask)) {
-            return $entryTask;
-        } else {
-            return false;
+        // ログ出力ファイル
+        $logger = new FileLogger('/home/y/share/pear/blueplum/log/api.log');
+
+        // 返却値の初期化
+        $result = [];
+
+        try {
+          if (empty($zipCode)) {
+              throw new Exception("no zipcode...");
+          }
+          $address = getUserAddress($zipCode);
+          if (!empty($address)) {
+              $result = [
+                'result'  => '200',
+                'address' => $address
+              ];
+          }
+        } catch(Exception $e) {
+            $result = [
+              'result'  => '200',
+              'message' => $e->getMessage()
+              ];
         }
+        returnJson($result);
     }
 
     /**
